@@ -86,11 +86,22 @@ public class Page {
     }
     
     /**
-     * Gets whether the page has any issues
+     * Gets whether the page has any issues (errors/warnings)
      * @return True if there are any issues, false otherwise
      */
     public boolean hasIssues() {
         return this.issues.size() > 0;
+    }
+    
+    /**
+     * Gets whether the page has any error issues
+     * @return True if there are errors, false otherwise
+     */
+    public boolean hasErrors() {
+        for (Issue issue : this.issues) {
+            if (issue.isError()) return true;
+        }
+        return false;
     }
     
     /**

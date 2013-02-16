@@ -5,4 +5,8 @@ Syntax: glob
 .settings/
 .classpath
 
+# Maven Artifacts
 target/
+
+# Other
+temp.txt

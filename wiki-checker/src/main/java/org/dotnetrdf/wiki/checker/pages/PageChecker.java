@@ -78,15 +78,16 @@ public class PageChecker {
 
     /**
      * Run the page checker
+     * @param quiet Quite Mode
      * @throws IOException 
      */
-    public void run() throws IOException {
+    public void run(boolean quiet) throws IOException {
         // First scan for pages
-        tracker.scan(this.baseDir);
+        tracker.scan(this.baseDir, quiet);
         
         // Prepare regex
         Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
-        System.out.println("Using Regex " + linkRegex.toString() + " to search for links");
+        if (!quiet) System.out.println("Using Regex " + linkRegex.toString() + " to search for links");
 
         // Then start checking pages
         Iterator<Page> pages = tracker.getPages();
@@ -103,7 +104,7 @@ public class PageChecker {
             // Then we can start checking it
             // 1 - Warn about short pages
             int lines = lineData.length;
-            if (lines <= 10) {
+            if (lines <= 5) {
                 page.addIssue(new Issue("Page has only " + lines + " Lines of content, this page may be an incomplete/stub page"));
             }
             
@@ -138,7 +139,7 @@ public class PageChecker {
                 if (!link.isWikiLink()) continue;
                 
                 String linkPath = link.getPath();
-                if (this.tracker.hasPage(linkPath)) {
+                if (!this.tracker.hasPage(linkPath)) {
                     page.addIssue(new Issue("Broken Link - " + link.toString(), true));
                 }
             }
@@ -179,6 +180,7 @@ public class PageChecker {
             int len = lines[line].length();
             if (count + len >= index) return line + 1;
             count += len + 1; // The +1 is for the \n
+            line++;
         }
         return line + 1;
     }

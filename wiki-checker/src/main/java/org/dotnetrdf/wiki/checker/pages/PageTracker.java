@@ -48,12 +48,13 @@ public class PageTracker {
     /**
      * Discovers pages by scanning a directory
      * @param directory Directory
+     * @param quiet Quiet Mode
      * @throws FileNotFoundException Thrown if the specified directory does not exist
      */
-    void scan(String directory) throws FileNotFoundException {
+    void scan(String directory, boolean quiet) throws FileNotFoundException {
         File dir = new File(directory);
         if (dir.exists() && dir.isDirectory()) {
-            this.scan("", dir, true);
+            this.scan("", dir, true, quiet);
         } else {
             throw new FileNotFoundException("Scan Directory " + directory + " does not exist or is not a directory");
         }
@@ -65,28 +66,28 @@ public class PageTracker {
      * @param dir Directory to scan
      * @param top Whether this is the top level directory
      */
-    private void scan(String basePath, File dir, boolean top) {
+    private void scan(String basePath, File dir, boolean top, boolean quiet) {
         // Ignore hidden directories
         if (dir.getPath().contains(".")) return;
         
-        System.out.println("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
+        if (!quiet) System.out.println("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
         
         // Scan for files and folders in this directory
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 // Scan sub-directory
-                this.scan(basePath + (top ? "" : dir.getName() + File.separator), f, false);
+                this.scan(basePath + (top ? "" : dir.getName() + File.separator), f, false, quiet);
             } else if (f.getName().endsWith(".wiki")) {
                 // Track page
                 Page page = new Page(basePath + (top ? "" : dir.getName() + File.separator) + f.getName());
-                System.out.println("Found page " + page.getPath());
                 if (!pages.containsKey(page.getPath())) {
+                    if (!quiet) System.out.println("Found page " + page.getPath());
                     pages.put(page.getPath(), page);
                 }
             }
         }
         
-        System.out.println("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
+        if (!quiet) System.out.println("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
     }
     
     /**
@@ -104,5 +105,13 @@ public class PageTracker {
      */
     public Iterator<Page> getPages() {
         return this.pages.values().iterator();
+    }
+    
+    /**
+     * Gets the page count
+     * @return Page Count
+     */
+    public int getPageCount() {
+        return this.pages.size();
     }
 }

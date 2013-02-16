@@ -53,21 +53,28 @@ public class CheckerCmd {
                 // Check specified directory
                 PageTracker tracker = new PageTracker();
                 PageChecker checker = new PageChecker(tracker, args[0]);
-                checker.run();
-                
+                boolean warn = args.length > 1 ? args[1].trim().toLowerCase().equals("true") : true;
+                boolean quiet = args.length > 2 ? args[2].trim().toLowerCase().equals("true") : true;
+                checker.run(quiet);
+
                 // Dump Report
                 Iterator<Page> iter = tracker.getPages();
+                System.out.println("Checked " + tracker.getPageCount() + " Page(s) for issues");
+                System.out.println();
                 while (iter.hasNext()) {
                     Page page = iter.next();
-                    System.out.println(page.toString());
-                    
+                    if ((page.hasIssues() && (warn || page.hasErrors())) || !quiet) {
+                        System.out.println(page.toString());
+                    }
+
                     // Report Issues
-                    if (page.hasIssues()) {
+                    if (page.hasIssues() && (warn || page.hasErrors())) {
                         Iterator<Issue> issues = page.getIssues();
                         while (issues.hasNext()) {
                             Issue issue = issues.next();
                             System.out.println(issue.toString());
                         }
+                        System.out.println();
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -88,7 +95,11 @@ public class CheckerCmd {
         System.err.println("============");
         System.err.println();
         System.err.println("Usage is:");
-        System.err.println("./check directory");
+        System.err.println("./check directory [warn quiet]");
+        System.err.println();
+        System.err.println("directory is the base directory for the wiki");
+        System.err.println("warn controls whether warnings are shown (default true)");
+        System.err.println("quiet controls quite mode (default true)");
     }
 
 }
