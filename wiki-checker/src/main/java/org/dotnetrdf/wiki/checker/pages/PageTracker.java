@@ -50,10 +50,10 @@ public class PageTracker {
      * @param directory Directory
      * @throws FileNotFoundException Thrown if the specified directory does not exist
      */
-    public void scan(String directory) throws FileNotFoundException {
+    void scan(String directory) throws FileNotFoundException {
         File dir = new File(directory);
         if (dir.exists() && dir.isDirectory()) {
-            this.scan("", dir);
+            this.scan("", dir, true);
         } else {
             throw new FileNotFoundException("Scan Directory " + directory + " does not exist or is not a directory");
         }
@@ -63,24 +63,30 @@ public class PageTracker {
      * Scans recursively
      * @param basePath Base path
      * @param dir Directory to scan
+     * @param top Whether this is the top level directory
      */
-    private void scan(String basePath, File dir) {
+    private void scan(String basePath, File dir, boolean top) {
         // Ignore hidden directories
         if (dir.getPath().contains(".")) return;
+        
+        System.out.println("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
         
         // Scan for files and folders in this directory
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 // Scan sub-directory
-                this.scan(basePath + dir.getName() + "/", f);
+                this.scan(basePath + (top ? "" : dir.getName() + File.separator), f, false);
             } else if (f.getName().endsWith(".wiki")) {
                 // Track page
-                Page page = new Page(basePath + f.getName());
+                Page page = new Page(basePath + (top ? "" : dir.getName() + File.separator) + f.getName());
+                System.out.println("Found page " + page.getPath());
                 if (!pages.containsKey(page.getPath())) {
                     pages.put(page.getPath(), page);
                 }
             }
         }
+        
+        System.out.println("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
     }
     
     /**

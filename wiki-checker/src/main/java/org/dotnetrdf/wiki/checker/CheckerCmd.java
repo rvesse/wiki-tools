@@ -22,10 +22,12 @@
 package org.dotnetrdf.wiki.checker;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Iterator;
 
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.pages.Page;
+import org.dotnetrdf.wiki.checker.pages.PageChecker;
 import org.dotnetrdf.wiki.checker.pages.PageTracker;
 
 /**
@@ -48,11 +50,10 @@ public class CheckerCmd {
             System.exit(1);
         } else {
             try {
-                // Scan specified directory for pages
+                // Check specified directory
                 PageTracker tracker = new PageTracker();
-                tracker.scan(args[0]);
-                
-                // TODO: Add Checker Steps
+                PageChecker checker = new PageChecker(tracker, args[0]);
+                checker.run();
                 
                 // Dump Report
                 Iterator<Page> iter = tracker.getPages();
@@ -71,6 +72,10 @@ public class CheckerCmd {
                 }
             } catch (FileNotFoundException e) {
                 System.err.println(e.getMessage());
+                e.printStackTrace(System.err);
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                e.printStackTrace(System.err);
             }
         }
     }

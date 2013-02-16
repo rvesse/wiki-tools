@@ -46,6 +46,11 @@ public class Page {
      */
     public Page(String path) {
         this.path = path;
+        
+        // Strip extension if present
+        if (this.path.contains(".")) {
+            this.path = this.path.substring(0, this.path.lastIndexOf('.'));
+        }
     }
         
     /**
