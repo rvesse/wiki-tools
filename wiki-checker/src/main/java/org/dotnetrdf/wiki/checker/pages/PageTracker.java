@@ -109,9 +109,69 @@ public class PageTracker {
     
     /**
      * Gets the page count
-     * @return Page Count
+     * @return Total pages
      */
-    public int getPageCount() {
+    public int getTotalPages() {
         return this.pages.size();
+    }
+    
+    /**
+     * Gets the total number of links
+     * @return Total Links
+     */
+    public int getTotalLinks() {
+        int count = 0;
+        for (Page page : this.pages.values()) {
+            count += page.getLinkCount();
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the total number of wiki links
+     * @return Total wiki links
+     */
+    public int getTotalWikiLinks() {
+        int count = 0;
+        for (Page page : this.pages.values()) {
+            count += page.getWikiLinkCount();
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the total number of external links
+     * @return Total external links
+     */
+    public int getTotalExternalLinks() {
+        int count = 0;
+        for (Page page : this.pages.values()) {
+            count += page.getExternalLinkCount();
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the total number of errors
+     * @return Total errors
+     */
+    public int getTotalErrors() {
+        int count = 0;
+        for (Page page : this.pages.values()) {
+            count += page.getErrorCount();
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the total number of warnings
+     * @return Total warnings
+     */
+    public int getTotalWarnings() {
+        int count = 0;
+        for (Page page : this.pages.values()) {
+            count += page.getWarningCount();
+        }
+        return count;
     }
 }

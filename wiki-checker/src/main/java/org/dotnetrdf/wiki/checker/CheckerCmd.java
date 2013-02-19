@@ -59,7 +59,9 @@ public class CheckerCmd {
 
                 // Dump Report
                 Iterator<Page> iter = tracker.getPages();
-                System.out.println("Checked " + tracker.getPageCount() + " Page(s) for issues");
+                System.out.println("Checked " + tracker.getTotalPages() + " Page(s) for issues");
+                System.out.println(tracker.getTotalLinks() + " Link(s) discovered - " + tracker.getTotalWikiLinks() + " Wiki Link(s) and " + tracker.getTotalExternalLinks() + " External Link(s)");
+                System.out.println(tracker.getTotalErrors() + " Error(s) and " + tracker.getTotalWarnings() + " Warning(s)");
                 System.out.println();
                 while (iter.hasNext()) {
                     Page page = iter.next();

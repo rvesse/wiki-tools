@@ -131,10 +131,74 @@ public class Page {
     @Override
     public String toString() {
         if (this.checked) {
-            return this.path + " ( " + this.links.size() + " Link(s) with " + this.issues.size() + " Issue(s))";
+            return this.path + " (" + this.links.size() + " Link(s) with " + this.issues.size() + " Issue(s))";
         } else {
             return this.path + " (Unchecked)";
         }
+    }
+
+    /**
+     * Gets the number of links on the page
+     * @return Number of links
+     */
+    public int getLinkCount() {
+        return this.links.size();
+    }
+    
+    /**
+     * Gets the number of internal wiki links on the page
+     * @return Number of internal links
+     */
+    public int getWikiLinkCount() {
+        int count = 0;
+        for (Link l : this.links) {
+            if (l.isWikiLink()) count++;
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the number of external links on the page
+     * @return Number of external links
+     */
+    public int getExternalLinkCount() {
+        int count = 0;
+        for (Link l : this.links) {
+            if (!l.isWikiLink()) count++;
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the number of issues identified
+     * @return Number of issues
+     */
+    public int getIssueCount() {
+        return this.issues.size();
+    }
+    
+    /**
+     * Gets the number of errors identified
+     * @return Number of errors
+     */
+    public int getErrorCount() {
+        int count = 0;
+        for (Issue i : this.issues) {
+            if (i.isError()) count++;
+        }
+        return count;
+    }
+    
+    /**
+     * Gets the number of warnings identified
+     * @return Number of warnings
+     */
+    public int getWarningCount() {
+        int count = 0;
+        for (Issue i : this.issues) {
+            if (!i.isError()) count++;
+        }
+        return count;
     }
     
 }
