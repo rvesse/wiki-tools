@@ -7,6 +7,8 @@ Syntax: glob
 
 # Maven Artifacts
 target/
+dependency-reduced-pom.xml
 
 # Other
 temp.txt
+report.txt

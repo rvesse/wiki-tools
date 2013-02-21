@@ -25,11 +25,20 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 
 /**
@@ -42,6 +51,9 @@ public class PageChecker {
 
     private PageTracker tracker;
     private String baseDir;
+    private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
+    private Map<String, Integer> httpStatuses = new HashMap<String, Integer>();
+    private HttpClient httpClient = new DefaultHttpClient();
 
     /**
      * Creates a new page checker
@@ -78,16 +90,19 @@ public class PageChecker {
 
     /**
      * Run the page checker
-     * @param quiet Quite Mode
-     * @throws IOException 
+     * 
+     * @param quiet
+     *            Quite Mode
+     * @throws IOException
      */
     public void run(boolean quiet) throws IOException {
         // First scan for pages
         tracker.scan(this.baseDir, quiet);
-        
+
         // Prepare regex
         Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
-        if (!quiet) System.out.println("Using Regex " + linkRegex.toString() + " to search for links");
+        if (!quiet)
+            System.out.println("Using Regex " + linkRegex.toString() + " to search for links");
 
         // Then start checking pages
         Iterator<Page> pages = tracker.getPages();
@@ -100,50 +115,116 @@ public class PageChecker {
             // Firstly we need to read in the page text
             String text = this.getText(page);
             String[] lineData = text.split("\n");
-            
+
             // Then we can start checking it
             // 1 - Warn about short pages
             int lines = lineData.length;
             if (lines <= 5) {
                 page.addIssue(new Issue("Page has only " + lines + " Lines of content, this page may be an incomplete/stub page"));
             }
-            
+
             // 2 - Detect Links
             Matcher linkMatcher = linkRegex.matcher(text);
             while (linkMatcher.find()) {
                 MatchResult linkMatch = linkMatcher.toMatchResult();
-                
+
                 // Find position
                 int line = this.calculateLine(lineData, linkMatch.start());
                 int col = this.calculateColumn(lineData, linkMatch.start());
-                
+
                 // Find link information and track as a link
                 String linkText = linkMatch.group().toString();
                 linkText = linkText.substring(2, linkText.length() - 2);
                 if (linkText.contains("|")) {
                     String linkPath = linkText.substring(0, linkText.lastIndexOf('|'));
                     String linkFriendlyText = linkText.substring(linkText.lastIndexOf('|') + 1);
-                    
+
                     page.addLink(new Link(linkPath, linkFriendlyText, line, col));
                 } else {
                     page.addLink(new Link(linkText, line, col));
                 }
             }
-            
+
             // 3 - Check Links
             Iterator<Link> links = page.getLinks();
             while (links.hasNext()) {
                 Link link = links.next();
-                
-                // TODO: Add remote link validation
-                if (!link.isWikiLink()) continue;
-                
-                String linkPath = link.getPath();
-                if (!this.tracker.hasPage(linkPath)) {
-                    page.addIssue(new Issue("Broken Link - " + link.toString(), true));
+
+                // Determine how to validate the link
+                if (link.isWikiLink()) {
+                    // Wiki Link Validation
+                    String linkPath = link.getPath();
+                    if (!this.tracker.hasPage(linkPath)) {
+                        page.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
+                    }
+                } else {
+                    // External Link Validation
+                    if (this.externalUris.get(link.getPath()) != null) {
+                        // Already validated, report broken link if necessary
+                        if (this.externalUris.get(link.getPath()) != true) {
+                            page.addIssue(new Issue("Broken External Link (HTTP Status " + this.httpStatuses.get(link.getPath())
+                                    + ") - " + link.toString(), true));
+                        }
+                    } else {
+                        // Validate the external link
+                        HttpHead head = null;
+                        HttpGet get = null;
+                        try {
+                            head = new HttpHead(link.getPath());
+                            head.setHeader("Accept", "*/*");
+                            if (!quiet)
+                                System.out.println("Validating External Link " + link.getPath());
+                            HttpResponse resp = this.httpClient.execute(head);
+
+                            if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() < 400) {
+                                // Valid
+                                this.externalUris.put(link.getPath(), true);
+                            } else {
+                                // Try a GET instead, in case the server doesn't
+                                // support HEAD nicely
+                                head.releaseConnection();
+                                head.reset();
+                                head = null;
+                                get = new HttpGet(link.getPath());
+                                get.setHeader("Accept", "*/*");
+                                resp = this.httpClient.execute(get);
+
+                                if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() < 400) {
+                                    // Valid
+                                    this.externalUris.put(link.getPath(), true);
+                                } else {
+                                    // Invalid
+                                    this.externalUris.put(link.getPath(), false);
+                                    this.httpStatuses.put(link.getPath(), resp.getStatusLine().getStatusCode());
+                                    page.addIssue(new Issue("Broken External Link (HTTP Status "
+                                            + resp.getStatusLine().getStatusCode() + ") - " + link.toString(), true));
+                                }
+                            }
+
+                        } catch (IllegalArgumentException e) {
+                            this.externalUris.put(link.getPath(), false);
+                            page.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                        } catch (UnknownHostException e) {
+                            this.externalUris.put(link.getPath(), false);
+                            page.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                        } catch (Throwable e) {
+                            this.externalUris.put(link.getPath(), false);
+                            page.addIssue(new Issue("Unexpected Error with External Link URI - " + link.toString(), true));
+                            e.printStackTrace(System.out);
+                        } finally {
+                            if (head != null) {
+                                head.releaseConnection();
+                                head.reset();
+                            }
+                            if (get != null) {
+                                get.releaseConnection();
+                                get.reset();
+                            }
+                        }
+                    }
                 }
             }
-            
+
             // Finally mark as checked
             page.setChecked(true);
         }
@@ -151,7 +232,9 @@ public class PageChecker {
 
     /**
      * Gets the text of a page
-     * @param page Page
+     * 
+     * @param page
+     *            Page
      * @return Text
      * @throws IOException
      */
@@ -178,19 +261,21 @@ public class PageChecker {
         int count = 0;
         while (count < index) {
             int len = lines[line].length();
-            if (count + len >= index) return line + 1;
+            if (count + len >= index)
+                return line + 1;
             count += len + 1; // The +1 is for the \n
             line++;
         }
         return line + 1;
     }
-    
+
     private int calculateColumn(String[] lines, int index) {
         int line = 0;
         int count = 0;
         while (count < index) {
             int len = lines[line].length();
-            if (count + len >= index) return index - count;
+            if (count + len >= index)
+                return index - count;
             count += len + 1; // The +1 is for the \n
         }
         return 1;

@@ -43,4 +43,11 @@
 			</plugin>
 		</plugins>
 	</build>
+  	<dependencies>
+  		<dependency>
+  			<groupId>org.apache.httpcomponents</groupId>
+  			<artifactId>httpclient</artifactId>
+  			<version>4.2.3</version>
+  		</dependency>
+  	</dependencies>
 </project>
