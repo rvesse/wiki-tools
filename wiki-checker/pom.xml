@@ -49,5 +49,10 @@
   			<artifactId>httpclient</artifactId>
   			<version>4.2.3</version>
   		</dependency>
+  		<dependency>
+  			<groupId>org.apache.jena</groupId>
+  			<artifactId>jena-iri</artifactId>
+  			<version>0.9.3</version>
+  		</dependency>
   	</dependencies>
 </project>

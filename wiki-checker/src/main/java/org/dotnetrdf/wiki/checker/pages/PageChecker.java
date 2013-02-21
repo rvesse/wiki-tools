@@ -39,6 +39,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.jena.iri.IRI;
+import org.apache.jena.iri.IRIFactory;
+import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 
 /**
@@ -167,6 +170,28 @@ public class PageChecker {
                         }
                     } else {
                         // Validate the external link
+                        
+                        // Firstly look for obvious issues with the IRI
+                        IRI iri = IRIFactory.uriImplementation().create(link.getPath());
+                        if (iri.hasViolation(true)) {
+                            Iterator<Violation> violations = iri.violations(true);
+                            boolean iriErrors = false;
+                            while (violations.hasNext()) {
+                                Violation violation = violations.next();
+                                if (violation.isError()) {
+                                    iriErrors = true;
+                                    page.addIssue(new Issue("External Link " + link.toString() + " violates the URI specification - " + violation.getLongMessage(), true));
+                                } else {
+                                    page.addIssue(new Issue("External Link " + link.toString() + " has a warning against the URI specification - " + violation.getShortMessage(), false));
+                                }
+                            }
+                            
+                            // Skip further validation if has errors
+                            if (iriErrors) continue;
+                        }
+                        
+                        // Try a HTTP HEAD request first then fallback to a HTTP GET
+                        // when necessary
                         HttpHead head = null;
                         HttpGet get = null;
                         try {
