@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -142,14 +141,14 @@ public class PageChecker {
                     String linkPath = linkText.substring(0, linkText.lastIndexOf('|'));
                     String linkFriendlyText = linkText.substring(linkText.lastIndexOf('|') + 1);
 
-                    page.addLink(new Link(linkPath, linkFriendlyText, line, col));
+                    page.addOutboundLink(new Link(linkPath, linkFriendlyText, line, col));
                 } else {
-                    page.addLink(new Link(linkText, line, col));
+                    page.addOutboundLink(new Link(linkText, line, col));
                 }
             }
 
             // 3 - Check Links
-            Iterator<Link> links = page.getLinks();
+            Iterator<Link> links = page.getOutboundLinks();
             while (links.hasNext()) {
                 Link link = links.next();
 
@@ -157,9 +156,14 @@ public class PageChecker {
                 if (link.isWikiLink()) {
                     // Wiki Link Validation
                     String linkPath = link.getPath();
-                    if (!this.tracker.hasPage(linkPath)) {
+                    Page target = this.tracker.getPage(linkPath);
+                    if (target == null) {
+                        // Mark as Broken
                         page.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
-                    }
+                    } else {
+                        // Mark as Inbound Link on target Page
+                        target.addInboundLink(link);
+                    }                    
                 } else {
                     // External Link Validation
                     if (this.externalUris.get(link.getPath()) != null) {
@@ -252,6 +256,20 @@ public class PageChecker {
 
             // Finally mark as checked
             page.setChecked(true);
+        }
+        
+        // After initial check of pages need to do a subsequent check
+        // for things that require information for all pages
+        
+        // Check for orphaned/poorly linked pages
+        pages = this.tracker.getPages();
+        while (pages.hasNext()) {
+            Page page = pages.next();
+            if (page.getInboundLinkCount() == 0) {
+                page.addIssue(new Issue("Page is isolated,  no inbound links to this page were found", true));
+            } else if (page.getInboundLinkCount() == 1) {
+                page.addIssue(new Issue("Page has only a single inbound link", false));
+            }
         }
     }
 

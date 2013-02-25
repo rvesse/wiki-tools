@@ -39,6 +39,7 @@ public class Page {
     private boolean checked = false;
     private List<Issue> issues = new ArrayList<Issue>();
     private Set<Link> links = new HashSet<Link>();
+    private Set<Link> inboundLinks = new HashSet<Link>();
     
     /**
      * Creates a page
@@ -113,25 +114,41 @@ public class Page {
     }
     
     /**
-     * Adds a link to the page
-     * @param link Link
+     * Adds an outbound link to the page
+     * @param link Outbound Link
      */
-    public void addLink(Link link) {
+    public void addOutboundLink(Link link) {
         this.links.add(link);
+    }
+        
+    /**
+     * Gets the outbound links for the page
+     * @return Outbound Links
+     */
+    public Iterator<Link> getOutboundLinks() {
+        return this.links.iterator();
     }
     
     /**
-     * Gets the links for the page
-     * @return Links
+     * Adds an inbound link to the page
+     * @param link Inbound Link
      */
-    public Iterator<Link> getLinks() {
-        return this.links.iterator();
+    public void addInboundLink(Link link) {
+        this.inboundLinks.add(link);
+    }
+    
+    /**
+     * Gets the inbound links for the page
+     * @return Inbound Links
+     */
+    public Iterator<Link> getInboundLinks() {
+        return this.inboundLinks.iterator();
     }
     
     @Override
     public String toString() {
         if (this.checked) {
-            return this.path + " (" + this.links.size() + " Link(s) with " + this.issues.size() + " Issue(s))";
+            return this.path + " (" + this.links.size() + " Outbound Link(s) with " + this.issues.size() + " Issue(s) and " + this.inboundLinks.size() + " Inbound Link(s))";
         } else {
             return this.path + " (Unchecked)";
         }
@@ -141,7 +158,7 @@ public class Page {
      * Gets the number of links on the page
      * @return Number of links
      */
-    public int getLinkCount() {
+    public int getOutboundLinkCount() {
         return this.links.size();
     }
     
@@ -149,7 +166,7 @@ public class Page {
      * Gets the number of internal wiki links on the page
      * @return Number of internal links
      */
-    public int getWikiLinkCount() {
+    public int getOutboundWikiLinkCount() {
         int count = 0;
         for (Link l : this.links) {
             if (l.isWikiLink()) count++;
@@ -161,12 +178,20 @@ public class Page {
      * Gets the number of external links on the page
      * @return Number of external links
      */
-    public int getExternalLinkCount() {
+    public int getOutboundExternalLinkCount() {
         int count = 0;
         for (Link l : this.links) {
             if (!l.isWikiLink()) count++;
         }
         return count;
+    }
+    
+    /**
+     * Gets the number of inbound links to the page
+     * @return Number of inbound links
+     */
+    public int getInboundLinkCount() {
+        return this.inboundLinks.size();
     }
     
     /**

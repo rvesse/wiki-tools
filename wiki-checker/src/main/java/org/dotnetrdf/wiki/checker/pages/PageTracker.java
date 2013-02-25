@@ -122,7 +122,7 @@ public class PageTracker {
     public int getTotalLinks() {
         int count = 0;
         for (Page page : this.pages.values()) {
-            count += page.getLinkCount();
+            count += page.getOutboundLinkCount();
         }
         return count;
     }
@@ -134,7 +134,7 @@ public class PageTracker {
     public int getTotalWikiLinks() {
         int count = 0;
         for (Page page : this.pages.values()) {
-            count += page.getWikiLinkCount();
+            count += page.getOutboundWikiLinkCount();
         }
         return count;
     }
@@ -146,7 +146,7 @@ public class PageTracker {
     public int getTotalExternalLinks() {
         int count = 0;
         for (Page page : this.pages.values()) {
-            count += page.getExternalLinkCount();
+            count += page.getOutboundExternalLinkCount();
         }
         return count;
     }
@@ -173,5 +173,14 @@ public class PageTracker {
             count += page.getWarningCount();
         }
         return count;
+    }
+
+    /**
+     * Gets the page associated with the given wiki path
+     * @param linkPath Wiki Link Path
+     * @return Page or null if no such page
+     */
+    public Page getPage(String linkPath) {
+        return this.pages.get(linkPath);
     }
 }

@@ -99,4 +99,9 @@ public class Link {
     public String toString() {
         return this.text + (this.text.equals(this.path) ? "" : "(" + this.path + ")") + " [Line " + this.line + " Column " + this.column + "]";
     }
+    
+    @Override
+    public int hashCode() {
+        return this.path.hashCode();
+    }
 }
