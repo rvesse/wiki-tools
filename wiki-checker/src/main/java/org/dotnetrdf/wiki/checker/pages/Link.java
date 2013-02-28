@@ -65,10 +65,19 @@ public class Link {
     
     /**
      * Gets whether this is a wiki link
-     * @return True if a wiki link
+     * @return True if a wiki link, false otherwise
      */
     public boolean isWikiLink() {
-        return !this.path.startsWith("http");
+        //TODO: Make this a regex based check to see if the path has a scheme component
+        return !this.path.startsWith("http") && !this.path.startsWith("mailto:");
+    }
+    
+    /**
+     * Gets whether this is an email link
+     * @return True if an email link, false otherwise
+     */
+    public boolean isMailLink() {
+        return this.path.startsWith("mailto:");
     }
     
     /**
@@ -77,6 +86,14 @@ public class Link {
      */
     public String getText() {
         return this.text;
+    }
+    
+    /**
+     * Does the link have friendly text?
+     * @return Returns true if the display text for the link differs from the actual link, false otherwise
+     */
+    public boolean hasFriendlyText() {
+        return !this.text.equals(this.path);
     }
     
     /**

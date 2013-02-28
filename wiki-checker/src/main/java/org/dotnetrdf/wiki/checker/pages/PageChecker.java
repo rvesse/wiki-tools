@@ -124,8 +124,13 @@ public class PageChecker {
             if (lines <= 5) {
                 page.addIssue(new Issue("Page has only " + lines + " Lines of content, this page may be an incomplete/stub page"));
             }
+            
+            // 2 - Warn for <<toc>> macro used on non-top level page
+            if (!page.isTopLevel() && text.contains("<<toc")) {
+                page.addIssue(new Issue("Non-top level page uses the TOC macro, if this is used to list directory contents the generated links will be incorrect, see BitBucket Issue #2224", false));
+            }
 
-            // 2 - Detect Links
+            // 3 - Detect Links
             Matcher linkMatcher = linkRegex.matcher(text);
             while (linkMatcher.find()) {
                 MatchResult linkMatch = linkMatcher.toMatchResult();
@@ -147,10 +152,15 @@ public class PageChecker {
                 }
             }
 
-            // 3 - Check Links
+            // 4 - Check Links
             Iterator<Link> links = page.getOutboundLinks();
             while (links.hasNext()) {
                 Link link = links.next();
+                
+                // Issue warnings for links without friendly text
+                if (!link.hasFriendlyText() && (!link.isWikiLink() || link.getPath().contains("/"))) {
+                    page.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
+                }
 
                 // Determine how to validate the link
                 if (link.isWikiLink()) {
@@ -163,7 +173,10 @@ public class PageChecker {
                     } else {
                         // Mark as Inbound Link on target Page
                         target.addInboundLink(link);
-                    }                    
+                    }
+                } else if (link.isMailLink()) {
+                    // Warn on mail links
+                    page.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(8) + " publicly", false));
                 } else {
                     // External Link Validation
                     if (this.externalUris.get(link.getPath()) != null) {

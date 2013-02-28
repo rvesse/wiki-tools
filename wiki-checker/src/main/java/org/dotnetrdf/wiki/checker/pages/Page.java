@@ -71,6 +71,14 @@ public class Page {
     }
     
     /**
+     * Gets whether the page is a top level page
+     * @return True if a top level page, false otherwise
+     */
+    public boolean isTopLevel() {
+        return !this.path.contains("/");
+    }
+    
+    /**
      * Sets whether the page has been checked
      * @param checked Check status of the page
      */
@@ -134,6 +142,8 @@ public class Page {
      * @param link Inbound Link
      */
     public void addInboundLink(Link link) {
+        // Don't count self referential links in inbound links
+        if (link.getPath().equals(this.path)) return;
         this.inboundLinks.add(link);
     }
     
