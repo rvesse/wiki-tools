@@ -58,6 +58,8 @@ public class Format {
         this.fmt = format;
         this.name = name;
         this.linkDetector = detector;
+        this.isText = isText;
+        this.isWiki = isWiki;
     }
     
     /**
