@@ -36,6 +36,7 @@ import org.dotnetrdf.wiki.checker.issues.Issue;
 public class Page {
 
     private String path;
+    private String filename;
     private boolean checked = false;
     private List<Issue> issues = new ArrayList<Issue>();
     private Set<Link> links = new HashSet<Link>();
@@ -47,8 +48,9 @@ public class Page {
      */
     public Page(String path) {
         this.path = path;
+        this.filename = path;
         
-        // Strip extension if present
+        // Strip extension if present from path
         if (this.path.contains(".")) {
             this.path = this.path.substring(0, this.path.lastIndexOf('.'));
         }
@@ -60,6 +62,14 @@ public class Page {
      */
     public String getPath() {
         return this.path;
+    }
+    
+    /**
+     * Gets the filename of the page
+     * @return Filename
+     */
+    public String getFilename() {
+        return this.filename;
     }
     
     /**
