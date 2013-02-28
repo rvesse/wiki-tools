@@ -167,6 +167,8 @@ public class PageChecker {
                     page.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(8) + " publicly", false));
                 } else {
                     // External Link Validation
+                    // TODO: Strip off #fragment and ?querystrings to speed this stage up
+                    
                     if (this.externalUris.get(link.getPath()) != null) {
                         // Already validated, report broken link if necessary
                         if (this.externalUris.get(link.getPath()) != true) {
@@ -266,10 +268,12 @@ public class PageChecker {
         pages = this.tracker.getPages();
         while (pages.hasNext()) {
             Page page = pages.next();
-            if (page.getInboundLinkCount() == 0) {
-                page.addIssue(new Issue("Page is isolated,  no inbound links to this page were found", true));
-            } else if (page.getInboundLinkCount() == 1) {
-                page.addIssue(new Issue("Page has only a single inbound link", false));
+            if (page.getFormat().isWiki()) {
+                if (page.getInboundLinkCount() == 0) {
+                    page.addIssue(new Issue("Page is isolated,  no inbound links to this page were found", true));
+                } else if (page.getInboundLinkCount() == 1) {
+                    page.addIssue(new Issue("Page has only a single inbound link", false));
+                }
             }
         }
     }
