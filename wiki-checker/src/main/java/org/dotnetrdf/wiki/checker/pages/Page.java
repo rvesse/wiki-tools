@@ -56,8 +56,8 @@ public class Page {
         this.filename = path.replace('/', File.separatorChar);
         this.format = format;
         
-        // Strip extension if present from path
-        if (this.path.contains(".")) {
+        // Strip extension if present from path for wiki formats only
+        if (this.format.isWiki() && this.path.contains(".")) {
             this.path = this.path.substring(0, this.path.lastIndexOf('.'));
         }
     }
@@ -180,9 +180,9 @@ public class Page {
     @Override
     public String toString() {
         if (this.checked) {
-            return this.path + " (Format: " + this.format.toString() + " with " + this.links.size() + " Outbound Link(s) with " + this.issues.size() + " Issue(s) and " + this.inboundLinks.size() + " Inbound Link(s))";
+            return this.getPath() + " (Format: " + this.format.toString() + " with " + this.links.size() + " Outbound Link(s) with " + this.issues.size() + " Issue(s) and " + this.inboundLinks.size() + " Inbound Link(s))";
         } else {
-            return this.path + " (Format: " + this.format.toString() + " Unchecked)";
+            return this.getPath() + " (Format: " + this.format.toString() + " Unchecked)";
         }
     }
 

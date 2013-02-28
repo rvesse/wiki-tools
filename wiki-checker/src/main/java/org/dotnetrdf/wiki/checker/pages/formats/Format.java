@@ -34,7 +34,7 @@ public class Format {
     private DataFormat fmt;
     private String name;
     private LinkDetector linkDetector;
-    private boolean isText = true;
+    private boolean isText = true, isWiki = true;
     
     /**
      * Creates new format information
@@ -43,7 +43,7 @@ public class Format {
      * @param detector Link Detector
      */
     public Format(DataFormat format, String name, LinkDetector detector) {
-        this(format, name, true, detector);
+        this(format, name, true, true, detector);
     }
     
     /**
@@ -51,9 +51,10 @@ public class Format {
      * @param format Data Format
      * @param name Friendly name for the format
      * @param isText Whether this is a text format
+     * @param isWiki Whether this is a wiki format
      * @param detector Link Detector
      */
-    public Format(DataFormat format, String name, boolean isText, LinkDetector detector) {
+    public Format(DataFormat format, String name, boolean isText, boolean isWiki, LinkDetector detector) {
         this.fmt = format;
         this.name = name;
         this.linkDetector = detector;
@@ -81,6 +82,14 @@ public class Format {
      */
     public boolean isText() {
         return this.isText;
+    }
+    
+    /**
+     * Is this a wiki format?
+     * @return True if a wiki format, false otherwise
+     */
+    public boolean isWiki() {
+        return this.isWiki;
     }
     
     /**
