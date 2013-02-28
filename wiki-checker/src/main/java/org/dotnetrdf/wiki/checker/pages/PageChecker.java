@@ -42,6 +42,7 @@ import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.checker.links.Link;
 
 /**
  * The page checker is responsible for carrying out actual checks on pages

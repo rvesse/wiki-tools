@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.checker.links.Link;
 
 /**
  * Represents a page in the wiki

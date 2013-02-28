@@ -23,7 +23,6 @@ package org.dotnetrdf.wiki.checker.links;
 
 import java.util.List;
 
-import org.dotnetrdf.wiki.checker.pages.Link;
 
 /**
  * Interface for classes which can detect links in a page

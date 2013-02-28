@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.pages;
+package org.dotnetrdf.wiki.checker.links;
 
 /**
  * Represents a link on the wiki
