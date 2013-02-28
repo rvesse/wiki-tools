@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.dotnetrdf.wiki.checker.pages.formats.FormatRegistry;
+
 /**
  * Tracks all the detected wiki pages, whether they have been validated and any
  * issues associated with them
@@ -76,10 +78,10 @@ public class PageTracker {
         for (File f : dir.listFiles()) {
             if (f.isDirectory()) {
                 // Scan sub-directory
-                this.scan(basePath + (top ? "" : dir.getName() + File.separator), f, false, quiet);
-            } else if (f.getName().endsWith(".wiki")) {
+                this.scan(basePath + (top ? "" : dir.getName() + "/"), f, false, quiet);
+            } else {
                 // Track page
-                Page page = new Page(basePath + (top ? "" : dir.getName() + File.separator) + f.getName());
+                Page page = new Page(basePath + (top ? "" : dir.getName() + "/") + f.getName(), FormatRegistry.getFormat(f.getName()));
                 if (!pages.containsKey(page.getPath())) {
                     if (!quiet) System.out.println("Found page " + page.getPath());
                     pages.put(page.getPath(), page);

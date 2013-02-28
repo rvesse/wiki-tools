@@ -78,7 +78,7 @@ public class FormatRegistry {
      * @param filename Filename
      * @return Format
      */
-    public Format getFormat(String filename) {
+    public static Format getFormat(String filename) {
         if (!init) FormatRegistry.init();
         if (!filename.contains(".")) return defaultFormat;
         Format fmt = formats.get(filename.substring(filename.lastIndexOf('.')));

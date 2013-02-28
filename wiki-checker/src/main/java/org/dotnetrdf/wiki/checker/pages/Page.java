@@ -20,6 +20,7 @@
  */
 package org.dotnetrdf.wiki.checker.pages;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.links.Link;
+import org.dotnetrdf.wiki.checker.pages.formats.Format;
 
 /**
  * Represents a page in the wiki
@@ -42,14 +44,16 @@ public class Page {
     private List<Issue> issues = new ArrayList<Issue>();
     private Set<Link> links = new HashSet<Link>();
     private Set<Link> inboundLinks = new HashSet<Link>();
+    private Format format;
     
     /**
      * Creates a page
-     * @param path Wiki path to the page
+     * @param path Path to the page
+     * @param format Format of the page
      */
-    public Page(String path) {
+    public Page(String path, Format format) {
         this.path = path;
-        this.filename = path;
+        this.filename = path.replace('/', File.separatorChar);
         
         // Strip extension if present from path
         if (this.path.contains(".")) {
@@ -71,6 +75,14 @@ public class Page {
      */
     public String getFilename() {
         return this.filename;
+    }
+    
+    /**
+     * Gets the format of the page
+     * @return Format
+     */
+    public Format getFormat() {
+        return this.format;
     }
     
     /**
