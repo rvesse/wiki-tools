@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.dotnetrdf.wiki.checker.links.CreoleLinkDetector;
 import org.dotnetrdf.wiki.checker.links.NoLinkDetector;
+import org.dotnetrdf.wiki.checker.links.SimpleLinkDetector;
 
 /**
  * Registry for formats
@@ -65,7 +66,7 @@ public class FormatRegistry {
         formats.put(".textile", new Format(DataFormat.TEXTILE, "Textile", null));
         
         //Plain Text
-        formats.put(".txt", new Format(DataFormat.PLAIN_TEXT, "Plain Text", true, false, null));
+        formats.put(".txt", new Format(DataFormat.PLAIN_TEXT, "Plain Text", true, false, new SimpleLinkDetector()));
         
         //Images
         Format img = new Format(DataFormat.IMAGE, "Image", false, false, noLinks);

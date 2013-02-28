@@ -44,6 +44,7 @@ import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.links.Link;
 import org.dotnetrdf.wiki.checker.links.LinkDetector;
+import org.dotnetrdf.wiki.checker.pages.formats.DataFormat;
 
 /**
  * The page checker is responsible for carrying out actual checks on pages
@@ -118,12 +119,12 @@ public class PageChecker {
             // Then we can start checking it
             // 1 - Warn about short pages
             int lines = lineData.length;
-            if (lines <= 5) {
+            if (page.getFormat().isText() && lines <= 5) {
                 page.addIssue(new Issue("Page has only " + lines + " Lines of content, this page may be an incomplete/stub page"));
             }
             
             // 2 - Warn for <<toc>> macro used on non-top level page
-            if (!page.isTopLevel() && text.contains("<<toc")) {
+            if (!page.isTopLevel() && page.getFormat().getDataFormat().equals(DataFormat.CREOLE) && text.contains("<<toc")) {
                 page.addIssue(new Issue("Non-top level page uses the TOC macro, if this is used to list directory contents the generated links will be incorrect, see BitBucket Issue #2224", false));
             }
 
