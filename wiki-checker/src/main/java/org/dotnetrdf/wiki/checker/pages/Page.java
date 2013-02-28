@@ -142,8 +142,6 @@ public class Page {
      * @param link Inbound Link
      */
     public void addInboundLink(Link link) {
-        // Don't count self referential links in inbound links
-        if (link.getPath().equals(this.path)) return;
         this.inboundLinks.add(link);
     }
     

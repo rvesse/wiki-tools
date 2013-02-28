@@ -172,7 +172,10 @@ public class PageChecker {
                         page.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
                     } else {
                         // Mark as Inbound Link on target Page
-                        target.addInboundLink(link);
+                        // Don't count self referential links in inbound links
+                        if (!page.getPath().equals(link.getPath())) {
+                            target.addInboundLink(link);
+                        }
                     }
                 } else if (link.isMailLink()) {
                     // Warn on mail links
