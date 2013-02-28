@@ -54,6 +54,7 @@ public class Page {
     public Page(String path, Format format) {
         this.path = path;
         this.filename = path.replace('/', File.separatorChar);
+        this.format = format;
         
         // Strip extension if present from path
         if (this.path.contains(".")) {

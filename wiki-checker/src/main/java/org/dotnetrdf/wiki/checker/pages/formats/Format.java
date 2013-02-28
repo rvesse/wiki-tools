@@ -34,6 +34,7 @@ public class Format {
     private DataFormat fmt;
     private String name;
     private LinkDetector linkDetector;
+    private boolean isText = true;
     
     /**
      * Creates new format information
@@ -42,6 +43,17 @@ public class Format {
      * @param detector Link Detector
      */
     public Format(DataFormat format, String name, LinkDetector detector) {
+        this(format, name, true, detector);
+    }
+    
+    /**
+     * Creates new format information
+     * @param format Data Format
+     * @param name Friendly name for the format
+     * @param isText Whether this is a text format
+     * @param detector Link Detector
+     */
+    public Format(DataFormat format, String name, boolean isText, LinkDetector detector) {
         this.fmt = format;
         this.name = name;
         this.linkDetector = detector;
@@ -61,6 +73,14 @@ public class Format {
      */
     public String getFriendlyName() {
         return this.name;
+    }
+    
+    /**
+     * Is this a text format?
+     * @return True if a text format, false otherwise
+     */
+    public boolean isText() {
+        return this.isText;
     }
     
     /**

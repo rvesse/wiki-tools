@@ -283,7 +283,9 @@ public class PageChecker {
      * @throws IOException
      */
     private String getText(Page page) throws IOException {
-        String pageFile = this.baseDir + page.getPath() + ".wiki";
+        if (!page.getFormat().isText()) return "";
+        
+        String pageFile = this.baseDir + page.getFilename();
         FileReader reader = new FileReader(pageFile);
 
         StringWriter sw = new StringWriter(8192);

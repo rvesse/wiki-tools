@@ -36,7 +36,7 @@ public class FormatRegistry {
 
     private static boolean init = false;
     private static Map<String, Format> formats = new HashMap<String, Format>();
-    private static Format defaultFormat = new Format(DataFormat.UNKNOWN, "Unknown Format", null);
+    private static Format defaultFormat = new Format(DataFormat.UNKNOWN, "Unknown Format", false, null);
     
     /**
      * Initialize the registry
@@ -68,7 +68,7 @@ public class FormatRegistry {
         formats.put(".txt", new Format(DataFormat.PLAIN_TEXT, "Plain Text", null));
         
         //Images
-        Format img = new Format(DataFormat.IMAGE, "Image", noLinks);
+        Format img = new Format(DataFormat.IMAGE, "Image", false, noLinks);
         formats.put(".jpg", img);
         formats.put(".jpeg", img);
         formats.put(".png", img);
