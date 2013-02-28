@@ -179,9 +179,9 @@ public class Page {
     @Override
     public String toString() {
         if (this.checked) {
-            return this.path + " (" + this.links.size() + " Outbound Link(s) with " + this.issues.size() + " Issue(s) and " + this.inboundLinks.size() + " Inbound Link(s))";
+            return this.path + " (Format: " + this.format.toString() + " with " + this.links.size() + " Outbound Link(s) with " + this.issues.size() + " Issue(s) and " + this.inboundLinks.size() + " Inbound Link(s))";
         } else {
-            return this.path + " (Unchecked)";
+            return this.path + " (Format: " + this.format.toString() + " Unchecked)";
         }
     }
 

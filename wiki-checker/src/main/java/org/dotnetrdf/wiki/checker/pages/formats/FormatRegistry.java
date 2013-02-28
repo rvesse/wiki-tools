@@ -24,6 +24,9 @@ package org.dotnetrdf.wiki.checker.pages.formats;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dotnetrdf.wiki.checker.links.CreoleLinkDetector;
+import org.dotnetrdf.wiki.checker.links.NoLinkDetector;
+
 /**
  * Registry for formats
  * @author rvesse
@@ -41,8 +44,10 @@ public class FormatRegistry {
     public static synchronized void init() {
         if (init) return;
         
+        NoLinkDetector noLinks = new NoLinkDetector();
+        
         //Creole
-        formats.put(".wiki", new Format(DataFormat.CREOLE, "Creole", null));
+        formats.put(".wiki", new Format(DataFormat.CREOLE, "Creole", new CreoleLinkDetector()));
         
         //Markdown
         Format md = new Format(DataFormat.MARKDOWN, "Markdown", null);
@@ -63,7 +68,7 @@ public class FormatRegistry {
         formats.put(".txt", new Format(DataFormat.PLAIN_TEXT, "Plain Text", null));
         
         //Images
-        Format img = new Format(DataFormat.IMAGE, "Image", null);
+        Format img = new Format(DataFormat.IMAGE, "Image", noLinks);
         formats.put(".jpg", img);
         formats.put(".jpeg", img);
         formats.put(".png", img);

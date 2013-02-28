@@ -43,6 +43,7 @@ import org.apache.jena.iri.IRIFactory;
 import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.links.Link;
+import org.dotnetrdf.wiki.checker.links.LinkDetector;
 
 /**
  * The page checker is responsible for carrying out actual checks on pages
@@ -102,11 +103,6 @@ public class PageChecker {
         // First scan for pages
         tracker.scan(this.baseDir, quiet);
 
-        // Prepare regex
-        Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
-        if (!quiet)
-            System.out.println("Using Regex " + linkRegex.toString() + " to search for links");
-
         // Then start checking pages
         Iterator<Page> pages = tracker.getPages();
         while (pages.hasNext()) {
@@ -132,25 +128,13 @@ public class PageChecker {
             }
 
             // 3 - Detect Links
-            Matcher linkMatcher = linkRegex.matcher(text);
-            while (linkMatcher.find()) {
-                MatchResult linkMatch = linkMatcher.toMatchResult();
-
-                // Find position
-                int line = this.calculateLine(lineData, linkMatch.start());
-                int col = this.calculateColumn(lineData, linkMatch.start());
-
-                // Find link information and track as a link
-                String linkText = linkMatch.group().toString();
-                linkText = linkText.substring(2, linkText.length() - 2);
-                if (linkText.contains("|")) {
-                    String linkPath = linkText.substring(0, linkText.lastIndexOf('|'));
-                    String linkFriendlyText = linkText.substring(linkText.lastIndexOf('|') + 1);
-
-                    page.addOutboundLink(new Link(linkPath, linkFriendlyText, line, col));
-                } else {
-                    page.addOutboundLink(new Link(linkText, line, col));
-                }
+            LinkDetector detector = page.getFormat().getLinkDetector();
+            if (detector == null) {
+                // Issue a warning when no link detector available
+                page.addIssue(new Issue("Page has format " + page.getFormat().toString() + " which does not have a link detector, no links can be detected for this page", false));
+            } else {
+                // Detect links
+                detector.findLinks(page, text);
             }
 
             // 4 - Check Links
@@ -314,30 +298,5 @@ public class PageChecker {
         sw.close();
         return sw.toString();
 
-    }
-
-    private int calculateLine(String[] lines, int index) {
-        int line = 0;
-        int count = 0;
-        while (count < index) {
-            int len = lines[line].length();
-            if (count + len >= index)
-                return line + 1;
-            count += len + 1; // The +1 is for the \n
-            line++;
-        }
-        return line + 1;
-    }
-
-    private int calculateColumn(String[] lines, int index) {
-        int line = 0;
-        int count = 0;
-        while (count < index) {
-            int len = lines[line].length();
-            if (count + len >= index)
-                return index - count;
-            count += len + 1; // The +1 is for the \n
-        }
-        return 1;
     }
 }

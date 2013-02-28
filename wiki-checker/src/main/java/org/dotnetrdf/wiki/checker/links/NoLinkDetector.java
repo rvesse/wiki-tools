@@ -24,16 +24,14 @@ package org.dotnetrdf.wiki.checker.links;
 import org.dotnetrdf.wiki.checker.pages.Page;
 
 /**
- * Interface for classes which can detect links in a page
+ * A link detector that does nothing, used for formats that do not allow links
  * @author rvesse
  *
  */
-public interface LinkDetector {
+public class NoLinkDetector implements LinkDetector {
 
-    /**
-     * Finds links in the page
-     * @param page Page
-     * @param text Page Text
-     */
-    void findLinks(Page page, String text);
+    @Override
+    public void findLinks(Page page, String text) {
+        // No-op
+    }
 }
