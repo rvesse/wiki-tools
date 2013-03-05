@@ -165,7 +165,7 @@ public class PageChecker {
                     }
                 } else if (link.isMailLink()) {
                     // Warn on mail links
-                    page.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(8) + " publicly", false));
+                    page.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly", false));
                 } else {
                     // External Link Validation
                     // TODO: Strip off #fragment and ?querystrings to speed this stage up
