@@ -2,7 +2,7 @@
 
 cd > temp.dir
 set /p pwd=<temp.dir
-rem temp.dir
+del temp.dir
 
 echo Directory to check is %pwd%
 
