@@ -23,16 +23,22 @@ package org.dotnetrdf.wiki.checker;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Iterator;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.documents.DocumentChecker;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
+import org.slf4j.LoggerFactory;
 
 /**
  * Entry point for the Wiki Checker program
@@ -41,6 +47,7 @@ import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
  * 
  */
 public class CheckerCmd {
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CheckerCmd.class);
 
     /**
      * Entry point for the CLI
@@ -57,47 +64,34 @@ public class CheckerCmd {
                 // Configure log4j based on the warn and quiet settings
                 boolean warn = args.length > 1 ? args[1].trim().toLowerCase().equals("true") : true;
                 boolean quiet = args.length > 2 ? args[2].trim().toLowerCase().equals("true") : true;
-                BasicConfigurator.configure();
+                BasicConfigurator.resetConfiguration();
+                Logger.getRootLogger().removeAllAppenders();
+                Logger.getRootLogger().addAppender(
+                        new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "wiki-checker.log", true));
                 if (!quiet) {
-                    // When not in quiet mode up log level to DEBUG
+                    // When not in quiet mode up log level to DEBUG and add
+                    // Console Appender
                     Logger.getRootLogger().setLevel(Level.DEBUG);
+                    Logger.getRootLogger().addAppender(
+                            new ConsoleAppender(new PatternLayout(PatternLayout.DEFAULT_CONVERSION_PATTERN)));
                 }
                 // Ensure Apache HTTP Client logging is set to WARN
                 Logger.getLogger("org.apache.http").setLevel(Level.WARN);
-                
-                // TODO Should really create a per-run log file and add an appender for it
-                
+
                 // Scan specified directory
                 CheckedWiki<CheckedDocument> wiki = new CheckedWiki<CheckedDocument>();
                 CheckedWikiScanner<CheckedDocument> scanner = new CheckedWikiScanner<CheckedDocument>();
                 scanner.scan(wiki, args[0]);
-                
+
                 // Carry out checks
                 DocumentChecker<CheckedDocument> checker = new DocumentChecker<CheckedDocument>(wiki, args[0]);
                 checker.run();
 
                 // Dump Report
-                Iterator<CheckedDocument> iter = wiki.getDocuments();
-                System.out.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
-                System.out.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and " + wiki.getTotalExternalLinks() + " External Link(s)");
-                System.out.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
-                System.out.println();
-                while (iter.hasNext()) {
-                    CheckedDocument document = iter.next();
-                    if ((document.hasIssues() && (warn || document.hasErrors())) || !quiet) {
-                        System.out.println(document.toString());
-                    }
+                String report = getReport(wiki, warn, quiet);
+                System.out.println(report);
+                LOGGER.info("\n" + report);
 
-                    // Report Issues
-                    if (document.hasIssues() && (warn || document.hasErrors())) {
-                        Iterator<Issue> issues = document.getIssues();
-                        while (issues.hasNext()) {
-                            Issue issue = issues.next();
-                            System.out.println(issue.toString());
-                        }
-                        System.out.println();
-                    }
-                }
             } catch (FileNotFoundException e) {
                 System.err.println(e.getMessage());
                 e.printStackTrace(System.err);
@@ -106,6 +100,48 @@ public class CheckerCmd {
                 e.printStackTrace(System.err);
             }
         }
+    }
+
+    /**
+     * Generates the report string
+     * 
+     * @param wiki
+     *            Wiki
+     * @param warn
+     *            Whether to include warnings in the report
+     * @param quiet
+     *            Whether to enable quiet mode, if enabled only documents with
+     *            issues will be reported on
+     * @return
+     */
+    private static String getReport(CheckedWiki<CheckedDocument> wiki, boolean warn, boolean quiet) {
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+
+        Iterator<CheckedDocument> iter = wiki.getDocuments();
+        pw.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
+        pw.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and "
+                + wiki.getTotalExternalLinks() + " External Link(s)");
+        pw.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
+        pw.println();
+        while (iter.hasNext()) {
+            CheckedDocument document = iter.next();
+            if ((document.hasIssues() && (warn || document.hasErrors())) || !quiet) {
+                pw.println(document.toString());
+            }
+
+            // Report Issues
+            if (document.hasIssues() && (warn || document.hasErrors())) {
+                Iterator<Issue> issues = document.getIssues();
+                while (issues.hasNext()) {
+                    Issue issue = issues.next();
+                    pw.println(issue.toString());
+                }
+                pw.println();
+            }
+        }
+
+        return writer.toString();
     }
 
     /**

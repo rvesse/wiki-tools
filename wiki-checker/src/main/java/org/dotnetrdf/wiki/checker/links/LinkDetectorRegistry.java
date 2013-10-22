@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.links;
 
@@ -75,6 +75,13 @@ public class LinkDetectorRegistry {
         init = true;
     }
 
+    /**
+     * Gets a link detector based on the file name
+     * 
+     * @param filename
+     *            File name
+     * @return Link detector, null if none is available
+     */
     public static LinkDetector getLinkDetector(String filename) {
         return getLinkDetector(DocumentFormatRegistry.getFormat(filename));
     }
@@ -84,7 +91,7 @@ public class LinkDetectorRegistry {
      * 
      * @param format
      *            Format
-     * @return Link detector
+     * @return Link detector, null if none is available
      */
     public static LinkDetector getLinkDetector(Format format) {
         if (!init)

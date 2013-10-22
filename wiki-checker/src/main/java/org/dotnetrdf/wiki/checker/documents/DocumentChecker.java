@@ -46,6 +46,8 @@ import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
 import org.dotnetrdf.wiki.data.links.Link;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The document checker is responsible for carrying out actual checks on
@@ -57,6 +59,8 @@ import org.dotnetrdf.wiki.data.links.Link;
  * 
  */
 public class DocumentChecker<T extends CheckedDocument> {
+    
+    private static final Logger LOGGER = LoggerFactory.getLogger(DocumentChecker.class);
 
     private CheckedWiki<T> wiki;
     private String baseDir;
@@ -111,10 +115,12 @@ public class DocumentChecker<T extends CheckedDocument> {
 
             if (document.hasBeenChecked())
                 continue;
+            
+            LOGGER.debug("Checking document " + document.getPath() + document.getFilename());
 
             // Firstly we need to read in the document text
             String text = this.getText(document);
-            String[] lineData = text.split("\n");
+            String[] lineData = text == null ? new String[0] : text.split("\n");
 
             // Then we can start checking it
             // 1 - Warn about short documents
@@ -219,12 +225,13 @@ public class DocumentChecker<T extends CheckedDocument> {
                         try {
                             head = new HttpHead(link.getPath());
                             head.setHeader("Accept", "*/*");
-                            System.out.println("Validating External Link " + link.getPath());
+                            LOGGER.debug("Validating External Link " + link.getPath());
                             HttpResponse resp = this.httpClient.execute(head);
 
                             if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() < 400) {
                                 // Valid
                                 this.externalUris.put(link.getPath(), true);
+                                LOGGER.debug("External Link " + link.getPath() + " is valid");
                             } else {
                                 // Try a GET instead, in case the server doesn't
                                 // support HEAD nicely
@@ -238,25 +245,29 @@ public class DocumentChecker<T extends CheckedDocument> {
                                 if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() < 400) {
                                     // Valid
                                     this.externalUris.put(link.getPath(), true);
+                                    LOGGER.debug("External Link " + link.getPath() + " is valid");
                                 } else {
                                     // Invalid
                                     this.externalUris.put(link.getPath(), false);
                                     this.httpStatuses.put(link.getPath(), resp.getStatusLine().getStatusCode());
                                     document.addIssue(new Issue("Broken External Link (HTTP Status "
                                             + resp.getStatusLine().getStatusCode() + ") - " + link.toString(), true));
+                                    LOGGER.error("External Link " + link.getPath() + " is invalid");
                                 }
                             }
 
                         } catch (IllegalArgumentException e) {
                             this.externalUris.put(link.getPath(), false);
                             document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                            LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
                         } catch (UnknownHostException e) {
                             this.externalUris.put(link.getPath(), false);
                             document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                            LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
                         } catch (Throwable e) {
                             this.externalUris.put(link.getPath(), false);
                             document.addIssue(new Issue("Unexpected Error with External Link URI - " + link.toString(), true));
-                            e.printStackTrace(System.out);
+                            LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
                         } finally {
                             if (head != null) {
                                 head.releaseConnection();

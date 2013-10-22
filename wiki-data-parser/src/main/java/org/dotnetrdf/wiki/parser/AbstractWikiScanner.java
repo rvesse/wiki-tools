@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import org.dotnetrdf.wiki.data.Wiki;
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract implementation of a wiki scanner that defers creation of documents
@@ -36,6 +38,8 @@ import org.dotnetrdf.wiki.data.documents.Document;
  * 
  */
 public abstract class AbstractWikiScanner<T extends Document> implements WikiScanner<T> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiScanner.class);
 
     public final void scan(Wiki<T> wiki, String directory) throws FileNotFoundException {
         File dir = new File(directory);
@@ -61,7 +65,7 @@ public abstract class AbstractWikiScanner<T extends Document> implements WikiSca
         if (dir.getPath().contains("."))
             return;
 
-        System.out.println("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
+        LOGGER.info("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
 
         // Scan for files and folders in this directory
         for (File f : dir.listFiles()) {
@@ -72,13 +76,13 @@ public abstract class AbstractWikiScanner<T extends Document> implements WikiSca
                 // Create document and add to wiki
                 T document = createDocument(basePath + (top ? "" : dir.getName() + "/") + f.getName(), f);
                 if (!wiki.hasDocument(document.getPath())) {
-                    System.out.println("Found page " + document.getPath());
+                    LOGGER.info("Found document " + document.getPath());
                     wiki.addDocument(document);
                 }
             }
         }
 
-        System.out.println("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
+        LOGGER.info("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
     }
 
     protected abstract T createDocument(String wikiPath, File f);
