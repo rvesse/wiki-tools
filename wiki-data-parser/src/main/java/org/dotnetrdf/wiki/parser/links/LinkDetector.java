@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.links;
+package org.dotnetrdf.wiki.parser.links;
 
 import org.dotnetrdf.wiki.data.documents.Document;
 

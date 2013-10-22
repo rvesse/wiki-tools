@@ -40,12 +40,12 @@ import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.dotnetrdf.wiki.checker.links.LinkDetector;
-import org.dotnetrdf.wiki.checker.links.LinkDetectorRegistry;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
 import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.parser.links.LinkDetector;
+import org.dotnetrdf.wiki.parser.links.LinkDetectorRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class DocumentChecker<T extends CheckedDocument> {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentChecker.class);
 
     private CheckedWiki<T> wiki;
@@ -108,6 +108,8 @@ public class DocumentChecker<T extends CheckedDocument> {
      * @throws IOException
      */
     public void run() throws IOException {
+        LOGGER.info("Checking for per-document issues");
+        
         // Start checking documents
         Iterator<T> documents = this.wiki.getDocuments();
         while (documents.hasNext()) {
@@ -115,7 +117,7 @@ public class DocumentChecker<T extends CheckedDocument> {
 
             if (document.hasBeenChecked())
                 continue;
-            
+
             LOGGER.debug("Checking document " + document.getPath() + document.getFilename());
 
             // Firstly we need to read in the document text
@@ -157,6 +159,7 @@ public class DocumentChecker<T extends CheckedDocument> {
                 // Issue warnings for links without friendly text
                 if (!link.hasFriendlyText() && (!link.isWikiLink() || link.getPath().contains("/"))) {
                     document.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
+                    LOGGER.warn("Link does not have friendly text - " + link.toString());
                 }
 
                 // Determine how to validate the link
@@ -167,6 +170,7 @@ public class DocumentChecker<T extends CheckedDocument> {
                     if (target == null) {
                         // Mark as Broken
                         document.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
+                        LOGGER.error("Broken wiki link " + link.toString());
                     } else {
                         // Mark as Inbound Link on target Page
                         // Don't count self referential links in inbound links
@@ -178,6 +182,7 @@ public class DocumentChecker<T extends CheckedDocument> {
                     // Warn on mail links
                     document.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly",
                             false));
+                    LOGGER.warn("Email link exposes email address publicly - " + link.getPath().substring(7));
                 } else {
                     // External Link Validation
 
@@ -205,11 +210,14 @@ public class DocumentChecker<T extends CheckedDocument> {
                                 if (violation.isError()) {
                                     iriErrors = true;
                                     document.addIssue(new Issue("External Link " + link.toString()
-                                            + " violates the URI specification - " + violation.getLongMessage(), true));
+                                            + " violates the IRI specification - " + violation.getLongMessage(), true));
+                                    LOGGER.error("Link " + link.toString() + " is not a valid IRI - "
+                                            + violation.getLongMessage());
                                 } else {
                                     document.addIssue(new Issue("External Link " + link.toString()
-                                            + " has a warning against the URI specification - " + violation.getShortMessage(),
+                                            + " has a warning against the IRI specification - " + violation.getShortMessage(),
                                             false));
+                                    LOGGER.warn("Link " + link.toString() + " has an IRI warning - " + violation.getLongMessage());
                                 }
                             }
 
@@ -218,8 +226,8 @@ public class DocumentChecker<T extends CheckedDocument> {
                                 continue;
                         }
 
-                        // Try a HTTP HEAD request first then fallback to a HTTP
-                        // GET when necessary
+                        // Try a HTTP HEAD request first then fall back to a
+                        // HTTP GET when necessary
                         HttpHead head = null;
                         HttpGet get = null;
                         try {
@@ -284,11 +292,15 @@ public class DocumentChecker<T extends CheckedDocument> {
 
             // Finally mark as checked
             document.setChecked(true);
+            
+            LOGGER.debug("Finished checking document " + document.getPath() + document.getFilename());
         }
+        LOGGER.info("Finished checking for per-document wiki issues");
 
         // After initial check of documents need to do a subsequent check
         // for things that require information for all documents to have been
         // gathered
+        LOGGER.info("Checking for global wiki issues");
 
         // Check for orphaned/poorly linked documents
         documents = this.wiki.getDocuments();
@@ -302,6 +314,8 @@ public class DocumentChecker<T extends CheckedDocument> {
                 }
             }
         }
+        
+        LOGGER.info("Finished checking for global wiki issues");
     }
 
     /**

@@ -4,6 +4,7 @@ Syntax: glob
 .project
 .settings/
 .classpath
+test-output/
 
 # Maven Artifacts
 target/

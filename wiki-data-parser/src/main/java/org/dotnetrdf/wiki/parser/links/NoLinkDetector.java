@@ -19,50 +19,19 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.links;
+package org.dotnetrdf.wiki.parser.links;
+
+import org.dotnetrdf.wiki.data.documents.Document;
 
 /**
- * Abstract base implementation of a link detector
+ * A link detector that does nothing, used for formats that do not allow links
  * @author rvesse
  *
  */
-public abstract class BaseLinkDetector implements LinkDetector {
+public class NoLinkDetector implements LinkDetector {
 
-
-    /**
-     * Calculates the line number from an offset
-     * @param lines Line data
-     * @param offset Offset
-     * @return Line Number
-     */
-    protected final int calculateLine(String[] lines, int offset) {
-        int line = 0;
-        int count = 0;
-        while (count < offset) {
-            int len = lines[line].length();
-            if (count + len >= offset)
-                return line + 1;
-            count += len + 1; // The +1 is for the \n
-            line++;
-        }
-        return line + 1;
-    }
-
-    /**
-     * Calculates a column number from an offset
-     * @param lines Line data
-     * @param offset Offset
-     * @return Column Number
-     */
-    protected final int calculateColumn(String[] lines, int offset) {
-        int line = 0;
-        int count = 0;
-        while (count < offset) {
-            int len = lines[line].length();
-            if (count + len >= offset)
-                return offset - count;
-            count += len + 1; // The +1 is for the \n
-        }
-        return 1;
+    @Override
+    public void findLinks(Document page, String text) {
+        // No-op
     }
 }

@@ -66,15 +66,20 @@ public class CheckerCmd {
                 boolean quiet = args.length > 2 ? args[2].trim().toLowerCase().equals("true") : true;
                 BasicConfigurator.resetConfiguration();
                 Logger.getRootLogger().removeAllAppenders();
-                Logger.getRootLogger().addAppender(
-                        new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "wiki-checker.log", true));
                 if (!quiet) {
                     // When not in quiet mode up log level to DEBUG and add
                     // Console Appender
+                    System.out.println("Quite Mode is disabled, console logging is enabled");
                     Logger.getRootLogger().setLevel(Level.DEBUG);
                     Logger.getRootLogger().addAppender(
                             new ConsoleAppender(new PatternLayout(PatternLayout.DEFAULT_CONVERSION_PATTERN)));
                 }
+                
+                // Regardless of setting add a file appender
+                System.out.println("Logging to wiki-checker.log");
+                Logger.getRootLogger().addAppender(
+                        new FileAppender(new PatternLayout(PatternLayout.TTCC_CONVERSION_PATTERN), "wiki-checker.log", true));
+                
                 // Ensure Apache HTTP Client logging is set to WARN
                 Logger.getLogger("org.apache.http").setLevel(Level.WARN);
 
