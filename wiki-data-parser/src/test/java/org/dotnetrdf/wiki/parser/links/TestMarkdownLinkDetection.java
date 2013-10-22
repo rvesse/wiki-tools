@@ -1,8 +1,28 @@
 /*
- * Copyright 2013 YarcData LLC All Rights Reserved.
+Copyright (c) 2013 dotNetRDF Project (dotnetrdf-develop@lists.sf.net)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished
+to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
  */
 
 package org.dotnetrdf.wiki.parser.links;
+
+import java.util.Iterator;
 
 import org.dotnetrdf.wiki.data.documents.BasicDocument;
 import org.dotnetrdf.wiki.data.documents.Document;
@@ -38,7 +58,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -56,7 +76,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -74,7 +94,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -92,7 +112,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -102,13 +122,14 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with leading spaces before ID
-        // 4 or more spaces mean its in an unformatted block so not considered a link
+        // 4 or more spaces mean its in an unformatted block so not considered a
+        // link
         String text = "[Test][1]\n\n    [1]: http://example.org";
         linkDetector.findLinks(doc, text);
 
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -126,7 +147,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -144,7 +165,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -162,7 +183,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -178,7 +199,7 @@ public class TestMarkdownLinkDetection {
 
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -196,7 +217,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -214,7 +235,141 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
+
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks12() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Not a reference link because the link is escaped
+        String text = "\\[Test][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+    }
+
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks13() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Simple reference link
+        String text = "Some text and then I [Test][1] whether my link is detected\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 1);
+        Link link = doc.getOutboundLinks().next();
+        Assert.assertEquals(link.getText(), "Test");
+        Assert.assertEquals(link.getPath(), "http://example.org");
+    }
+
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks14() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Multiple reference links
+        String text = "I link to [A][1] and then to [B][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 2);
+        Iterator<Link> iter = doc.getOutboundLinks();
+        Link link = iter.next();
+        if (link.getText().equals("A")) {
+            Assert.assertEquals(link.getText(), "A");
+            Assert.assertEquals(link.getPath(), "http://example.org");
+
+            link = iter.next();
+            Assert.assertEquals(link.getText(), "B");
+            Assert.assertEquals(link.getPath(), "http://example.org");
+        } else {
+            Assert.assertEquals(link.getText(), "B");
+            Assert.assertEquals(link.getPath(), "http://example.org");
+
+            link = iter.next();
+            Assert.assertEquals(link.getText(), "A");
+            Assert.assertEquals(link.getPath(), "http://example.org");
+        }
+    }
+
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks15() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Not a reference link because the link is escaped
+        String text = "[Test\\][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+    }
+
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks16() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Simple reference link, the escape is for a backslash not for the [
+        String text = "\\\\[Test][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 1);
+        Link link = doc.getOutboundLinks().next();
+        Assert.assertEquals(link.getText(), "Test");
+        Assert.assertEquals(link.getPath(), "http://example.org");
+    }
     
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks17() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Single reference links since second is escaped
+        String text = "I link to [A][1] and then to \\[B][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 1);
+        Link link = doc.getOutboundLinks().next();
+        Assert.assertEquals(link.getText(), "A");
+        Assert.assertEquals(link.getPath(), "http://example.org");
+    }
+    
+    /**
+     * Tests reference link detection
+     */
+    @Test
+    public void referenceLinks18() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Single reference links since first is escaped
+        String text = "I link to \\[A][1] and then to [B][1]\n\n[1]: http://example.org";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 1);
+        Link link = doc.getOutboundLinks().next();
+        Assert.assertEquals(link.getText(), "B");
+        Assert.assertEquals(link.getPath(), "http://example.org");
+    }
+
     /**
      * Tests inline link detection
      */
@@ -232,7 +387,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests inline link detection
      */
@@ -250,7 +405,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests inline link detection
      */
@@ -268,7 +423,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests inline link detection
      */
@@ -284,6 +439,24 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(doc.getOutboundLinkCount(), 1);
         Link link = doc.getOutboundLinks().next();
         Assert.assertEquals(link.getText(), "Test");
+        Assert.assertEquals(link.getPath(), "http://example.org");
+    }
+
+    /**
+     * Tests auto link detection
+     */
+    @Test
+    public void autoLinks01() {
+        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Assert.assertEquals(doc.getOutboundLinkCount(), 0);
+
+        // Simple inline link
+        String text = "<http://example.org>";
+        linkDetector.findLinks(doc, text);
+
+        Assert.assertEquals(doc.getOutboundLinkCount(), 1);
+        Link link = doc.getOutboundLinks().next();
+        Assert.assertFalse(link.hasFriendlyText());
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
 }

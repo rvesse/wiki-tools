@@ -58,7 +58,7 @@ public class LinkDetectorRegistry {
         detectors.put(Format.CREOLE, new CreoleLinkDetector());
 
         // Markdown
-        // detectors.put(Format.MARKDOWN, null);
+        detectors.put(Format.MARKDOWN, new MarkdownLinkDetector());
 
         // Restructured Text
         // detectors.put(Format.RESTRUCTURED_TEXT, null);

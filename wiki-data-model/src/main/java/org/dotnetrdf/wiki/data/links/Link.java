@@ -119,6 +119,6 @@ public class Link {
     
     @Override
     public int hashCode() {
-        return this.path.hashCode();
+        return this.path.hashCode() ^ (this.hasFriendlyText() ? this.text.hashCode() : "".hashCode()) ^ this.line ^ this.column;
     }
 }
