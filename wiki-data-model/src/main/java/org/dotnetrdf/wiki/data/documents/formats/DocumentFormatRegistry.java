@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013 dotNetRDF Project (dotnetrdf-developer@lists.sf.net)
+ * Copyright (c) 2013 dotNetRDF Project (dotnetrdf-develop@lists.sf.net)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
