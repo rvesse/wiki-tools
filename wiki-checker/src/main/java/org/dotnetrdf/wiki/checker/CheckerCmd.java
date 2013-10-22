@@ -25,10 +25,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.checker.documents.DocumentChecker;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.dotnetrdf.wiki.checker.pages.Page;
-import org.dotnetrdf.wiki.checker.pages.PageChecker;
-import org.dotnetrdf.wiki.checker.pages.PageTracker;
+import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 
 /**
  * Entry point for the Wiki Checker program
@@ -50,28 +54,43 @@ public class CheckerCmd {
             System.exit(1);
         } else {
             try {
-                // Check specified directory
-                PageTracker tracker = new PageTracker();
-                PageChecker checker = new PageChecker(tracker, args[0]);
+                // Configure log4j based on the warn and quiet settings
                 boolean warn = args.length > 1 ? args[1].trim().toLowerCase().equals("true") : true;
                 boolean quiet = args.length > 2 ? args[2].trim().toLowerCase().equals("true") : true;
-                checker.run(quiet);
+                BasicConfigurator.configure();
+                if (!quiet) {
+                    // When not in quiet mode up log level to DEBUG
+                    Logger.getRootLogger().setLevel(Level.DEBUG);
+                }
+                // Ensure Apache HTTP Client logging is set to WARN
+                Logger.getLogger("org.apache.http").setLevel(Level.WARN);
+                
+                // TODO Should really create a per-run log file and add an appender for it
+                
+                // Scan specified directory
+                CheckedWiki<CheckedDocument> wiki = new CheckedWiki<CheckedDocument>();
+                CheckedWikiScanner<CheckedDocument> scanner = new CheckedWikiScanner<CheckedDocument>();
+                scanner.scan(wiki, args[0]);
+                
+                // Carry out checks
+                DocumentChecker<CheckedDocument> checker = new DocumentChecker<CheckedDocument>(wiki, args[0]);
+                checker.run();
 
                 // Dump Report
-                Iterator<Page> iter = tracker.getPages();
-                System.out.println("Checked " + tracker.getTotalPages() + " Page(s) for issues");
-                System.out.println(tracker.getTotalLinks() + " Link(s) discovered - " + tracker.getTotalWikiLinks() + " Wiki Link(s) and " + tracker.getTotalExternalLinks() + " External Link(s)");
-                System.out.println(tracker.getTotalErrors() + " Error(s) and " + tracker.getTotalWarnings() + " Warning(s)");
+                Iterator<CheckedDocument> iter = wiki.getDocuments();
+                System.out.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
+                System.out.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and " + wiki.getTotalExternalLinks() + " External Link(s)");
+                System.out.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
                 System.out.println();
                 while (iter.hasNext()) {
-                    Page page = iter.next();
-                    if ((page.hasIssues() && (warn || page.hasErrors())) || !quiet) {
-                        System.out.println(page.toString());
+                    CheckedDocument document = iter.next();
+                    if ((document.hasIssues() && (warn || document.hasErrors())) || !quiet) {
+                        System.out.println(document.toString());
                     }
 
                     // Report Issues
-                    if (page.hasIssues() && (warn || page.hasErrors())) {
-                        Iterator<Issue> issues = page.getIssues();
+                    if (document.hasIssues() && (warn || document.hasErrors())) {
+                        Iterator<Issue> issues = document.getIssues();
                         while (issues.hasNext()) {
                             Issue issue = issues.next();
                             System.out.println(issue.toString());

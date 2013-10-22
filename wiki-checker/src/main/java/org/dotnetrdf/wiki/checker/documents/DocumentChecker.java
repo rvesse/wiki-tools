@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.pages;
+package org.dotnetrdf.wiki.checker.documents;
 
 import java.io.File;
 import java.io.FileReader;
@@ -29,10 +29,6 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -41,47 +37,56 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.apache.jena.iri.Violation;
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.dotnetrdf.wiki.checker.links.Link;
 import org.dotnetrdf.wiki.checker.links.LinkDetector;
-import org.dotnetrdf.wiki.checker.pages.formats.DataFormat;
+import org.dotnetrdf.wiki.checker.links.LinkDetectorRegistry;
+import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
+import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
- * The page checker is responsible for carrying out actual checks on pages
+ * The document checker is responsible for carrying out actual checks on
+ * documents
  * 
  * @author rvesse
+ * @param <T>
+ *            Checked document type
  * 
  */
-public class PageChecker {
+public class DocumentChecker<T extends CheckedDocument> {
 
-    private PageTracker tracker;
+    private CheckedWiki<T> wiki;
     private String baseDir;
     private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
     private Map<String, Integer> httpStatuses = new HashMap<String, Integer>();
     private HttpClient httpClient = new DefaultHttpClient();
 
     /**
-     * Creates a new page checker
+     * Creates a new document checker
      * 
-     * @param tracker
-     *            Page Tracker
+     * @param wiki
+     *            Wiki which is presumed to have already been populated by an
+     *            appropriate {@link CheckedWikiScanner}
      * @param dir
      *            Base Directory
      */
-    public PageChecker(PageTracker tracker, String dir) {
-        this.tracker = tracker;
+    public DocumentChecker(CheckedWiki<T> wiki, String dir) {
+        this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))
             this.baseDir += File.separator;
     }
 
     /**
-     * Gets the page tracker
+     * Gets the wiki
      * 
-     * @return Page Tracker
+     * @return Wiki
      */
-    public PageTracker getPageTracker() {
-        return this.tracker;
+    public CheckedWiki<T> getWiki() {
+        return this.wiki;
     }
 
     /**
@@ -94,91 +99,96 @@ public class PageChecker {
     }
 
     /**
-     * Run the page checker
+     * Run the document checker
      * 
-     * @param quiet
-     *            Quite Mode
      * @throws IOException
      */
-    public void run(boolean quiet) throws IOException {
-        // First scan for pages
-        tracker.scan(this.baseDir, quiet);
+    public void run() throws IOException {
+        // Start checking documents
+        Iterator<T> documents = this.wiki.getDocuments();
+        while (documents.hasNext()) {
+            T document = documents.next();
 
-        // Then start checking pages
-        Iterator<Page> pages = tracker.getPages();
-        while (pages.hasNext()) {
-            Page page = pages.next();
-
-            if (page.getChecked())
+            if (document.hasBeenChecked())
                 continue;
 
-            // Firstly we need to read in the page text
-            String text = this.getText(page);
+            // Firstly we need to read in the document text
+            String text = this.getText(document);
             String[] lineData = text.split("\n");
 
             // Then we can start checking it
-            // 1 - Warn about short pages
+            // 1 - Warn about short documents
             int lines = lineData.length;
-            if (page.getFormat().isText() && lines <= 5) {
-                page.addIssue(new Issue("Page has only " + lines + " Lines of content, this page may be an incomplete/stub page"));
+            if (document.getFormat().isText() && lines <= 5) {
+                document.addIssue(new Issue("Page has only " + lines
+                        + " Lines of content, this document may be an incomplete/stub document"));
             }
-            
-            // 2 - Warn for <<toc>> macro used on non-top level page
-            if (!page.isTopLevel() && page.getFormat().getDataFormat().equals(DataFormat.CREOLE) && text.contains("<<toc")) {
-                page.addIssue(new Issue("Non-top level page uses the TOC macro, if this is used to list directory contents the generated links will be incorrect, see BitBucket Issue #2224", false));
+
+            // 2 - Warn for <<toc>> macro used on non-top level document
+            if (!document.isTopLevel() && document.getFormat().getDataFormat().equals(DataFormat.CREOLE)
+                    && text.contains("<<toc")) {
+                document.addIssue(new Issue(
+                        "Non-top level document uses the TOC macro, if this is used to list directory contents the generated links will be incorrect, see BitBucket Issue #2224",
+                        false));
             }
 
             // 3 - Detect Links
-            LinkDetector detector = page.getFormat().getLinkDetector();
+            LinkDetector detector = LinkDetectorRegistry.getLinkDetector(document.getFormat());
             if (detector == null) {
                 // Issue a warning when no link detector available
-                page.addIssue(new Issue("Page has format " + page.getFormat().toString() + " which does not have a link detector, no links can be detected for this page", false));
+                document.addIssue(new Issue("Page has format " + document.getFormat().toString()
+                        + " which does not have a link detector, no links can be detected for this document", false));
             } else {
                 // Detect links
-                detector.findLinks(page, text);
+                detector.findLinks(document, text);
             }
 
             // 4 - Check Links
-            Iterator<Link> links = page.getOutboundLinks();
+            Iterator<Link> links = document.getOutboundLinks();
             while (links.hasNext()) {
                 Link link = links.next();
-                
+
                 // Issue warnings for links without friendly text
                 if (!link.hasFriendlyText() && (!link.isWikiLink() || link.getPath().contains("/"))) {
-                    page.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
+                    document.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
                 }
 
                 // Determine how to validate the link
                 if (link.isWikiLink()) {
                     // Wiki Link Validation
                     String linkPath = link.getPath();
-                    Page target = this.tracker.getPage(linkPath);
+                    T target = this.wiki.getDocument(linkPath);
                     if (target == null) {
                         // Mark as Broken
-                        page.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
+                        document.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
                     } else {
                         // Mark as Inbound Link on target Page
                         // Don't count self referential links in inbound links
-                        if (!page.getPath().equals(link.getPath())) {
+                        if (!document.getPath().equals(link.getPath())) {
                             target.addInboundLink(link);
                         }
                     }
                 } else if (link.isMailLink()) {
                     // Warn on mail links
-                    page.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly", false));
+                    document.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly",
+                            false));
                 } else {
                     // External Link Validation
-                    // TODO: Strip off #fragment and ?querystrings to speed this stage up
-                    
+
+                    // TODO Externalize this code
+
+                    // TODO Strip off #fragment and ?querystrings to speed this
+                    // stage up
+
                     if (this.externalUris.get(link.getPath()) != null) {
                         // Already validated, report broken link if necessary
                         if (this.externalUris.get(link.getPath()) != true) {
-                            page.addIssue(new Issue("Broken External Link (HTTP Status " + this.httpStatuses.get(link.getPath())
-                                    + ") - " + link.toString(), true));
+                            document.addIssue(new Issue("Broken External Link (HTTP Status "
+                                    + this.httpStatuses.get(link.getPath()) + ") - " + link.toString(), true));
                         }
                     } else {
                         // Validate the external link
-                        
+
                         // Firstly look for obvious issues with the IRI
                         IRI iri = IRIFactory.uriImplementation().create(link.getPath());
                         if (iri.hasViolation(true)) {
@@ -188,25 +198,28 @@ public class PageChecker {
                                 Violation violation = violations.next();
                                 if (violation.isError()) {
                                     iriErrors = true;
-                                    page.addIssue(new Issue("External Link " + link.toString() + " violates the URI specification - " + violation.getLongMessage(), true));
+                                    document.addIssue(new Issue("External Link " + link.toString()
+                                            + " violates the URI specification - " + violation.getLongMessage(), true));
                                 } else {
-                                    page.addIssue(new Issue("External Link " + link.toString() + " has a warning against the URI specification - " + violation.getShortMessage(), false));
+                                    document.addIssue(new Issue("External Link " + link.toString()
+                                            + " has a warning against the URI specification - " + violation.getShortMessage(),
+                                            false));
                                 }
                             }
-                            
+
                             // Skip further validation if has errors
-                            if (iriErrors) continue;
+                            if (iriErrors)
+                                continue;
                         }
-                        
-                        // Try a HTTP HEAD request first then fallback to a HTTP GET
-                        // when necessary
+
+                        // Try a HTTP HEAD request first then fallback to a HTTP
+                        // GET when necessary
                         HttpHead head = null;
                         HttpGet get = null;
                         try {
                             head = new HttpHead(link.getPath());
                             head.setHeader("Accept", "*/*");
-                            if (!quiet)
-                                System.out.println("Validating External Link " + link.getPath());
+                            System.out.println("Validating External Link " + link.getPath());
                             HttpResponse resp = this.httpClient.execute(head);
 
                             if (resp.getStatusLine().getStatusCode() >= 200 && resp.getStatusLine().getStatusCode() < 400) {
@@ -229,20 +242,20 @@ public class PageChecker {
                                     // Invalid
                                     this.externalUris.put(link.getPath(), false);
                                     this.httpStatuses.put(link.getPath(), resp.getStatusLine().getStatusCode());
-                                    page.addIssue(new Issue("Broken External Link (HTTP Status "
+                                    document.addIssue(new Issue("Broken External Link (HTTP Status "
                                             + resp.getStatusLine().getStatusCode() + ") - " + link.toString(), true));
                                 }
                             }
 
                         } catch (IllegalArgumentException e) {
                             this.externalUris.put(link.getPath(), false);
-                            page.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                            document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
                         } catch (UnknownHostException e) {
                             this.externalUris.put(link.getPath(), false);
-                            page.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                            document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
                         } catch (Throwable e) {
                             this.externalUris.put(link.getPath(), false);
-                            page.addIssue(new Issue("Unexpected Error with External Link URI - " + link.toString(), true));
+                            document.addIssue(new Issue("Unexpected Error with External Link URI - " + link.toString(), true));
                             e.printStackTrace(System.out);
                         } finally {
                             if (head != null) {
@@ -259,39 +272,41 @@ public class PageChecker {
             }
 
             // Finally mark as checked
-            page.setChecked(true);
+            document.setChecked(true);
         }
-        
-        // After initial check of pages need to do a subsequent check
-        // for things that require information for all pages
-        
-        // Check for orphaned/poorly linked pages
-        pages = this.tracker.getPages();
-        while (pages.hasNext()) {
-            Page page = pages.next();
-            if (page.getFormat().isWiki()) {
-                if (page.getInboundLinkCount() == 0) {
-                    page.addIssue(new Issue("Page is isolated,  no inbound links to this page were found", true));
-                } else if (page.getInboundLinkCount() == 1) {
-                    page.addIssue(new Issue("Page has only a single inbound link", false));
+
+        // After initial check of documents need to do a subsequent check
+        // for things that require information for all documents to have been
+        // gathered
+
+        // Check for orphaned/poorly linked documents
+        documents = this.wiki.getDocuments();
+        while (documents.hasNext()) {
+            T document = documents.next();
+            if (document.getFormat().isWiki()) {
+                if (document.getInboundLinkCount() == 0) {
+                    document.addIssue(new Issue("Page is isolated,  no inbound links to this document were found", true));
+                } else if (document.getInboundLinkCount() == 1) {
+                    document.addIssue(new Issue("Page has only a single inbound link", false));
                 }
             }
         }
     }
 
     /**
-     * Gets the text of a page
+     * Gets the text of a document
      * 
-     * @param page
+     * @param document
      *            Page
-     * @return Text
+     * @return Text of the document, null for non-text formats
      * @throws IOException
      */
-    private String getText(Page page) throws IOException {
-        if (!page.getFormat().isText()) return "";
-        
-        String pageFile = this.baseDir + page.getFilename();
-        FileReader reader = new FileReader(pageFile);
+    private String getText(Document document) throws IOException {
+        if (!document.getFormat().isText())
+            return null;
+
+        String documentFile = this.baseDir + document.getFilename();
+        FileReader reader = new FileReader(documentFile);
 
         StringWriter sw = new StringWriter(8192);
         char buff[] = new char[8192];

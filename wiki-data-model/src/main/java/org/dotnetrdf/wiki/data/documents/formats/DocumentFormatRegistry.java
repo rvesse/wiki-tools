@@ -19,39 +19,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.pages.formats;
+package org.dotnetrdf.wiki.data.documents.formats;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import org.dotnetrdf.wiki.checker.links.CreoleLinkDetector;
-import org.dotnetrdf.wiki.checker.links.NoLinkDetector;
-import org.dotnetrdf.wiki.checker.links.SimpleLinkDetector;
 
 /**
  * Registry for formats
  * @author rvesse
  *
  */
-public class FormatRegistry {
+public class DocumentFormatRegistry {
 
     private static boolean init = false;
     private static Map<String, Format> formats = new HashMap<String, Format>();
-    private static Format defaultFormat = new Format(DataFormat.UNKNOWN, "Unknown Format", false, false, new NoLinkDetector());
     
     /**
      * Initialize the registry
      */
     public static synchronized void init() {
         if (init) return;
-        
-        NoLinkDetector noLinks = new NoLinkDetector();
-        
+                
         //Creole
-        formats.put(".wiki", new Format(DataFormat.CREOLE, "Creole", new CreoleLinkDetector()));
+        formats.put(".wiki", Format.CREOLE);
         
         //Markdown
-        Format md = new Format(DataFormat.MARKDOWN, "Markdown", null);
+        Format md = Format.MARKDOWN;
         formats.put(".md", md);
         formats.put(".mkd", md);
         formats.put(".mkdn", md);
@@ -60,16 +53,16 @@ public class FormatRegistry {
         formats.put(".text", md);
         
         //reStructuredText
-        formats.put(".rst", new Format(DataFormat.RESTRUCTURED_TEXT, "reStructuredText", null));
+        formats.put(".rst", Format.RESTRUCTURED_TEXT);
         
         //Textile
-        formats.put(".textile", new Format(DataFormat.TEXTILE, "Textile", null));
+        formats.put(".textile", Format.TEXTILE);
         
         //Plain Text
-        formats.put(".txt", new Format(DataFormat.PLAIN_TEXT, "Plain Text", true, false, new SimpleLinkDetector()));
+        formats.put(".txt", Format.PLAIN_TEXT);
         
         //Images
-        Format img = new Format(DataFormat.IMAGE, "Image", false, false, noLinks);
+        Format img = Format.IMAGE;
         formats.put(".jpg", img);
         formats.put(".jpeg", img);
         formats.put(".png", img);
@@ -85,10 +78,10 @@ public class FormatRegistry {
      * @return Format
      */
     public static Format getFormat(String filename) {
-        if (!init) FormatRegistry.init();
-        if (!filename.contains(".")) return defaultFormat;
+        if (!init) DocumentFormatRegistry.init();
+        if (!filename.contains(".")) return Format.UNKNOWN;
         Format fmt = formats.get(filename.substring(filename.lastIndexOf('.')));
         if (fmt != null) return fmt;
-        return defaultFormat;
+        return Format.UNKNOWN;
     }
 }

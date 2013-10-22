@@ -21,7 +21,7 @@
 
 package org.dotnetrdf.wiki.checker.links;
 
-import org.dotnetrdf.wiki.checker.pages.Page;
+import org.dotnetrdf.wiki.data.documents.Document;
 
 /**
  * A link detector that does nothing, used for formats that do not allow links
@@ -31,7 +31,7 @@ import org.dotnetrdf.wiki.checker.pages.Page;
 public class NoLinkDetector implements LinkDetector {
 
     @Override
-    public void findLinks(Page page, String text) {
+    public void findLinks(Document page, String text) {
         // No-op
     }
 }

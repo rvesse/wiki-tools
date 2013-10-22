@@ -25,7 +25,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dotnetrdf.wiki.checker.pages.Page;
+import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Link Detector for Creole pages
@@ -37,7 +38,7 @@ public class CreoleLinkDetector extends BaseLinkDetector {
     private Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
 
     @Override
-    public void findLinks(Page page, String text) {
+    public void findLinks(Document page, String text) {
         String[] lineData = text.split("\n");
         Matcher linkMatcher = linkRegex.matcher(text);
         while (linkMatcher.find()) {

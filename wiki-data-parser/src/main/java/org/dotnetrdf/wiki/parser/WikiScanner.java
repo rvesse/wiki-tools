@@ -19,21 +19,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.links;
+package org.dotnetrdf.wiki.parser;
 
+import java.io.FileNotFoundException;
+import org.dotnetrdf.wiki.data.Wiki;
 import org.dotnetrdf.wiki.data.documents.Document;
 
 /**
- * Interface for classes which can detect links in a page
+ * Interface for wiki scanners which take in a directory and populate a
+ * {@link Wiki} instance
+ * 
  * @author rvesse
- *
+ * @param <T>
+ *            Document type
+ * 
  */
-public interface LinkDetector {
+public interface WikiScanner<T extends Document> {
 
     /**
-     * Finds links in the page
-     * @param page Page
-     * @param text Page Text
+     * Discovers documents in the wiki by scanning a directory
+     * 
+     * @param wiki
+     *            Wiki to populate
+     * @param directory
+     *            Directory
+     * @throws FileNotFoundException
+     *             Thrown if the specified directory does not exist
      */
-    void findLinks(Document page, String text);
+    public void scan(Wiki<T> wiki, String directory) throws FileNotFoundException;
+
 }
