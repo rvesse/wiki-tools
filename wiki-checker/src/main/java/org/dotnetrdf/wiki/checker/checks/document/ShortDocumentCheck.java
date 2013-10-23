@@ -1,7 +1,8 @@
 
 
-package org.dotnetrdf.wiki.checker.checks;
+package org.dotnetrdf.wiki.checker.checks.document;
 
+import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;

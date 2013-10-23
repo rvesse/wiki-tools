@@ -5,8 +5,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpResponse;
@@ -17,6 +19,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.jena.iri.IRI;
 import org.apache.jena.iri.IRIFactory;
 import org.apache.jena.iri.Violation;
+import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
+import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -45,6 +49,8 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiChecker.class);
     private CheckedWiki<TLink, TDoc> wiki;
     private String baseDir;
+    private List<DocumentCheck> documentChecks = new ArrayList<DocumentCheck>();
+    private List<LinkCheck> linkChecks = new ArrayList<LinkCheck>();
     private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
     private Map<String, Integer> httpStatuses = new HashMap<String, Integer>();
     private HttpClient httpClient = new DefaultHttpClient();
@@ -74,7 +80,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
     public final String getBaseDirectory() {
         return this.baseDir;
     }
-    
+
     @Override
     public final void run() throws IOException {
         this.run(false);
@@ -91,6 +97,8 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
 
             if (document.hasBeenChecked() && !recheck)
                 continue;
+
+            // TODO If a re-check reset issues, links etc
 
             LOGGER.debug("Checking document " + document.getPath() + document.getFilename());
 
@@ -319,6 +327,28 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
         sw.close();
         return sw.toString();
 
+    }
+
+    @Override
+    public final void addDocumentCheck(DocumentCheck check) {
+        if (check != null)
+            this.documentChecks.add(check);
+    }
+
+    @Override
+    public Iterator<DocumentCheck> getDocumentChecks() {
+        return this.documentChecks.iterator();
+    }
+
+    @Override
+    public void addLinkCheck(LinkCheck check) {
+        if (check != null)
+            this.linkChecks.add(check);
+    }
+
+    @Override
+    public Iterator<LinkCheck> getLinkChecks() {
+        return this.linkChecks.iterator();
     }
 
 }

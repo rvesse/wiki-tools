@@ -21,6 +21,8 @@
 
 package org.dotnetrdf.wiki.checker;
 
+import org.dotnetrdf.wiki.checker.cmd.CheckerCmd;
+
 /**
  * Local tests for checker
  * @author rvesse

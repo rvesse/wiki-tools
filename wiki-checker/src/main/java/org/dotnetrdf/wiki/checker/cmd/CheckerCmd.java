@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker;
+package org.dotnetrdf.wiki.checker.cmd;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,13 +33,14 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import org.dotnetrdf.wiki.checker.BasicWikiChecker;
+import org.dotnetrdf.wiki.checker.WikiChecker;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
-import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.slf4j.LoggerFactory;
 
 /**
