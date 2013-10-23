@@ -23,20 +23,26 @@ package org.dotnetrdf.wiki.data.links;
 
 /**
  * Represents a link on the wiki
+ * 
  * @author rvesse
- *
+ * 
  */
 public class BasicLink implements Link {
 
     private String path, text;
     private int line = 0, column = 0;
-    
+
     /**
      * Creates a link
-     * @param path Path
-     * @param text Display Text
-     * @param line Line
-     * @param column Column
+     * 
+     * @param path
+     *            Path
+     * @param text
+     *            Display Text
+     * @param line
+     *            Line
+     * @param column
+     *            Column
      */
     public BasicLink(String path, String text, int line, int column) {
         this.path = path;
@@ -44,90 +50,111 @@ public class BasicLink implements Link {
         this.line = line;
         this.column = column;
     }
-    
+
     /**
      * Creates a link
-     * @param path Path
-     * @param line Line
-     * @param column Column
+     * 
+     * @param path
+     *            Path
+     * @param line
+     *            Line
+     * @param column
+     *            Column
      */
     public BasicLink(String path, int line, int column) {
         this(path, path, line, column);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#getPath()
      */
     @Override
     public String getPath() {
         return this.path;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#isWikiLink()
      */
     @Override
     public boolean isWikiLink() {
-        //TODO: Make this a regex based check to see if the path has a scheme component
+        // TODO: Make this a regex based check to see if the path has a scheme
+        // component
         return !this.path.startsWith("http") && !this.path.startsWith("mailto:");
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#isMailLink()
      */
     @Override
     public boolean isMailLink() {
         return this.path.startsWith("mailto:");
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#getText()
      */
     @Override
     public String getText() {
         return this.text;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#hasFriendlyText()
      */
     @Override
     public boolean hasFriendlyText() {
         return !this.text.equals(this.path);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#getLine()
      */
     @Override
     public int getLine() {
         return this.line;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.links.Link#getColumn()
      */
     @Override
     public int getColumn() {
         return this.column;
     }
-    
+
     @Override
     public String toString() {
-        return this.text + (this.text.equals(this.path) ? "" : "(" + this.path + ")") + " [Line " + this.line + " Column " + this.column + "]";
+        return this.text + (this.text.equals(this.path) ? "" : "(" + this.path + ")") + " [Line " + this.line + " Column "
+                + this.column + "]";
     }
-    
+
     @Override
     public int hashCode() {
         return this.path.hashCode();
     }
-    
+
     @Override
     public boolean equals(Object other) {
         if (other instanceof Link) {
-            Link l = (Link)other;
-            
-            // Equal if and only if path, position and friendly text are equal (or neither have friendly text)
+            Link l = (Link) other;
+
+            // Equal if and only if path, position and friendly text are equal
+            // (or neither have friendly text)
             if (this.getPath().equals(l.getPath())) {
                 if (this.getLine() == l.getLine() && this.getColumn() == l.getColumn()) {
                     if (this.hasFriendlyText() && l.hasFriendlyText()) {

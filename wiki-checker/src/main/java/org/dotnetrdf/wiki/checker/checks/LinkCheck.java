@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.checks;
 
@@ -31,12 +31,24 @@ import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
  * 
  * @author rvesse
  * 
- * @param <TLink>
- *            Checked link type
- * @param <TDoc>
- *            Checked document type
+ * 
  */
-public interface LinkCheck<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
+public interface LinkCheck {
 
-    public void check(TDoc document, TLink link, CheckedWiki<TLink, TDoc> wiki);
+    /**
+     * Carries out a check on a link
+     * 
+     * @param document
+     *            Document
+     * @param link
+     *            Link
+     * @param wiki
+     *            Wiki
+     * @param <TLink>
+     *            Checked link type
+     * @param <TDoc>
+     *            Checked document type
+     */
+    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
+            CheckedWiki<TLink, TDoc> wiki);
 }
