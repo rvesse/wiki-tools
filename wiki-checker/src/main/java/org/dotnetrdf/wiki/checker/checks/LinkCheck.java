@@ -22,8 +22,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.dotnetrdf.wiki.checker.checks;
 
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 
 /**
  * Interface for link checks
@@ -35,6 +36,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  * @param <TDoc>
  *            Checked document type
  */
-public interface LinkCheck<TLink extends Link, TDoc extends CheckedDocument<TLink>> {
+public interface LinkCheck<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
 
+    public void check(TDoc document, TLink link, CheckedWiki<TLink, TDoc> wiki);
 }

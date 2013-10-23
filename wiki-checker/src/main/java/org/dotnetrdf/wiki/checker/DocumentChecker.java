@@ -39,12 +39,11 @@ import org.apache.jena.iri.IRIFactory;
 import org.apache.jena.iri.Violation;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
-import org.dotnetrdf.wiki.data.links.BasicLink;
-import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.parser.links.LinkDetector;
 import org.dotnetrdf.wiki.parser.links.LinkDetectorRegistry;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  *            Checked document type
  * 
  */
-public class DocumentChecker<TLink extends Link, TDoc extends CheckedDocument<TLink>> {
+public class DocumentChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentChecker.class);
 

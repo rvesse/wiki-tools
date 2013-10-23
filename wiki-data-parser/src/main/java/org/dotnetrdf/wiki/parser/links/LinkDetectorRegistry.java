@@ -34,7 +34,6 @@ import org.dotnetrdf.wiki.data.documents.formats.Format;
  * @author rvesse
  * 
  */
-@SuppressWarnings("rawtypes")
 public class LinkDetectorRegistry {
 
     private static boolean init = false;

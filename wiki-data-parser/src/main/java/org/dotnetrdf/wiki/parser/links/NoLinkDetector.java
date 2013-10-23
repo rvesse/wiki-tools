@@ -28,14 +28,12 @@ import org.dotnetrdf.wiki.data.links.Link;
  * A link detector that does nothing, used for formats that do not allow links
  * 
  * @author rvesse
- * @param <T>
- *            Link type
  * 
  */
-public class NoLinkDetector<T extends Link> implements LinkDetector<T> {
+public class NoLinkDetector implements LinkDetector {
 
     @Override
-    public void findLinks(Document<T> page, String text) {
+    public <T extends Link> void findLinks(Document<T> page, String text) {
         // No-op
     }
 }

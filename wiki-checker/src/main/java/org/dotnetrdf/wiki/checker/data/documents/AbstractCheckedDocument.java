@@ -26,10 +26,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.AbstractDocument;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
-import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Abstract implementation of a checked document
@@ -39,7 +39,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  *            Link type
  * 
  */
-public abstract class AbstractCheckedDocument<TLink extends Link> extends AbstractDocument<TLink> implements
+public abstract class AbstractCheckedDocument<TLink extends CheckedLink> extends AbstractDocument<TLink> implements
         CheckedDocument<TLink> {
     // TODO Should really add a CheckedLink type
 

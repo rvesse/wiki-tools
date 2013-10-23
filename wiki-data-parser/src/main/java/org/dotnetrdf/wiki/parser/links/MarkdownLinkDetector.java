@@ -36,11 +36,9 @@ import org.dotnetrdf.wiki.data.links.Link;
  * Link Detector for Creole pages
  * 
  * @author rvesse
- * @param <T>
- *            Link type
  * 
  */
-public class MarkdownLinkDetector<T extends Link> extends BaseLinkDetector<T> {
+public class MarkdownLinkDetector extends BaseLinkDetector {
 
     private Pattern referencesRegex = Pattern.compile("\\[([^\\]]+)\\]:\\s+([^\\s]+)(\\s+(\"[^\"]+\"|'[^']+'|\\([^\\(]+\\)))?",
             Pattern.MULTILINE);
@@ -113,7 +111,7 @@ public class MarkdownLinkDetector<T extends Link> extends BaseLinkDetector<T> {
     }
 
     @Override
-    public void findLinks(Document<T> doc, String text) {
+    public <T extends Link> void findLinks(Document<T> doc, String text) {
         // Apply relevant escapes
         String[] lineData = text.split("\n");
         text = applyMarkdownEscapes(lineData, text);

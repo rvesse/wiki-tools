@@ -23,8 +23,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.dotnetrdf.wiki.checker.data;
 
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.BasicWiki;
-import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Represents a wiki composed of documents which may be checked and have issues
@@ -36,7 +36,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  * @param <TDoc>
  *            Checked document type
  */
-public class CheckedWiki<TLink extends Link, TDoc extends CheckedDocument<TLink>> extends BasicWiki<TLink, TDoc> {
+public class CheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends BasicWiki<TLink, TDoc> {
 
     /**
      * Gets the total number of errors

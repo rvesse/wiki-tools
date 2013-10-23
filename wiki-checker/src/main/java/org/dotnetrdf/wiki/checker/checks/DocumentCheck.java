@@ -24,7 +24,7 @@ package org.dotnetrdf.wiki.checker.checks;
 
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 
 /**
  * Interface for document checks
@@ -35,7 +35,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  * @param <TDoc>
  *            Checked document type
  */
-public interface DocumentCheck<TLink extends Link, TDoc extends CheckedDocument<TLink>> {
+public interface DocumentCheck<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
 
     /**
      * Carries out a check on the document

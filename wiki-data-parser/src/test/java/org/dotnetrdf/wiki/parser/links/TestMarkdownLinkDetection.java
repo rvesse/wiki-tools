@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
  */
 public class TestMarkdownLinkDetection {
 
-    private LinkDetector<BasicLink> linkDetector = new MarkdownLinkDetector<BasicLink>();
+    private LinkDetector linkDetector = new MarkdownLinkDetector();
 
     /**
      * Tests reference link detection

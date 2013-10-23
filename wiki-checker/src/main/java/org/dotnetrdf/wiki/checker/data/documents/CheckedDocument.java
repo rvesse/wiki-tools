@@ -24,9 +24,9 @@ package org.dotnetrdf.wiki.checker.data.documents;
 
 import java.util.Iterator;
 
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Interface for documents that may be checked for issues
@@ -36,7 +36,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  * @param <TLink>
  *            Link type
  */
-public interface CheckedDocument<TLink extends Link> extends Document<TLink> {
+public interface CheckedDocument<TLink extends CheckedLink> extends Document<TLink> {
 
     /**
      * Gets whether the document has been checked

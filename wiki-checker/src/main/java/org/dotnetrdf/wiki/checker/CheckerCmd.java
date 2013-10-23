@@ -36,6 +36,7 @@ import org.apache.log4j.PatternLayout;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.links.BasicLink;
@@ -85,12 +86,12 @@ public class CheckerCmd {
                 Logger.getLogger("org.apache.http").setLevel(Level.WARN);
 
                 // Scan specified directory
-                CheckedWiki<BasicLink, BasicCheckedDocument> wiki = new CheckedWiki<BasicLink, BasicCheckedDocument>();
-                CheckedWikiScanner<BasicLink, BasicCheckedDocument> scanner = new CheckedWikiScanner<BasicLink, BasicCheckedDocument>();
+                CheckedWiki<BasicCheckedLink, BasicCheckedDocument> wiki = new CheckedWiki<BasicCheckedLink, BasicCheckedDocument>();
+                CheckedWikiScanner<BasicCheckedLink, BasicCheckedDocument> scanner = new CheckedWikiScanner<BasicCheckedLink, BasicCheckedDocument>();
                 scanner.scan(wiki, args[0]);
 
                 // Carry out checks
-                DocumentChecker<BasicLink, BasicCheckedDocument> checker = new DocumentChecker<BasicLink, BasicCheckedDocument>(wiki, args[0]);
+                DocumentChecker<BasicCheckedLink, BasicCheckedDocument> checker = new DocumentChecker<BasicCheckedLink, BasicCheckedDocument>(wiki, args[0]);
                 checker.run();
 
                 // Dump Report
@@ -120,7 +121,7 @@ public class CheckerCmd {
      *            issues will be reported on
      * @return
      */
-    private static String getReport(CheckedWiki<BasicLink, BasicCheckedDocument> wiki, boolean warn, boolean quiet) {
+    private static String getReport(CheckedWiki<BasicCheckedLink, BasicCheckedDocument> wiki, boolean warn, boolean quiet) {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
 
@@ -131,7 +132,7 @@ public class CheckerCmd {
         pw.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
         pw.println();
         while (iter.hasNext()) {
-            CheckedDocument<BasicLink> document = iter.next();
+            CheckedDocument<BasicCheckedLink> document = iter.next();
             if ((document.hasIssues() && (warn || document.hasErrors())) || !quiet) {
                 pw.println(document.toString());
             }

@@ -32,16 +32,14 @@ import org.dotnetrdf.wiki.data.links.Link;
  * Link Detector for Creole pages
  * 
  * @author rvesse
- * @param <T>
- *            Link type
  * 
  */
-public class CreoleLinkDetector<T extends Link> extends BaseLinkDetector<T> {
+public class CreoleLinkDetector extends BaseLinkDetector {
 
     private Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
 
     @Override
-    public void findLinks(Document<T> doc, String text) {
+    public <T extends Link> void findLinks(Document<T> doc, String text) {
         String[] lineData = text.split("\n");
         Matcher linkMatcher = linkRegex.matcher(text);
         while (linkMatcher.find()) {

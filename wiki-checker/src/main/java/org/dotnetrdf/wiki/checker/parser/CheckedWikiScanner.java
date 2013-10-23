@@ -27,8 +27,8 @@ import java.io.File;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
-import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
 
 /**
@@ -40,14 +40,14 @@ import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
  * @param <TDoc>
  *            Checked document type
  */
-public class CheckedWikiScanner<TLink extends Link, TDoc extends CheckedDocument<TLink>> extends
+public class CheckedWikiScanner<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends
         AbstractWikiScanner<TLink, TDoc> {
 
     @SuppressWarnings("unchecked")
     @Override
     protected TDoc createDocument(String wikiPath, File f) {
         // Unchecked warning is kind of pointless because the type restriction
-        // guarantees that T will derived from CheckedDocument so casting
+        // guarantees that T will implement CheckedDocument so casting
         // CheckedDocument to T should always work
         return (TDoc) new BasicCheckedDocument(wikiPath, DocumentFormatRegistry.getFormat(f.getName()));
     }

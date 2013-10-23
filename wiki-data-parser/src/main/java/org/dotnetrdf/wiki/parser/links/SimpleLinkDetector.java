@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.parser.links;
 
@@ -30,17 +30,18 @@ import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.links.Link;
 
 /**
- * Simple link detector for files, this simply finds http://, https:// and mailto: links in the text
+ * Simple link detector for files, this simply finds http://, https:// and
+ * mailto: links in the text
+ * 
  * @author rvesse
- * @param <T> Link type
- *
+ * 
  */
-public class SimpleLinkDetector<T extends Link> extends BaseLinkDetector<T> {
+public class SimpleLinkDetector extends BaseLinkDetector {
 
     private Pattern linkRegex = Pattern.compile("(https?://|mailto:)[^\\s]+");
 
     @Override
-    public void findLinks(Document<T> doc, String text) {
+    public <T extends Link> void findLinks(Document<T> doc, String text) {
         String[] lineData = text.split("\n");
         Matcher linkMatcher = linkRegex.matcher(text);
         while (linkMatcher.find()) {
@@ -56,6 +57,5 @@ public class SimpleLinkDetector<T extends Link> extends BaseLinkDetector<T> {
             doc.addOutboundLink(doc.createLink(linkText, line, col));
         }
     }
-
 
 }

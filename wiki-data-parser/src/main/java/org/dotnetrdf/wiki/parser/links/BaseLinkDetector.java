@@ -21,17 +21,13 @@
 
 package org.dotnetrdf.wiki.parser.links;
 
-import org.dotnetrdf.wiki.data.links.Link;
-
 /**
  * Abstract base implementation of a link detector
  * 
  * @author rvesse
- * @param <T>
- *            Link type
  * 
  */
-public abstract class BaseLinkDetector<T extends Link> implements LinkDetector<T> {
+public abstract class BaseLinkDetector implements LinkDetector {
 
     /**
      * Calculates the line number from an offset

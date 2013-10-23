@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
-import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * A document which can be checked and have issues logged against it
@@ -36,7 +36,7 @@ import org.dotnetrdf.wiki.data.links.BasicLink;
  * @author rvesse
  * 
  */
-public class BasicCheckedDocument extends AbstractCheckedDocument<BasicLink> {
+public class BasicCheckedDocument extends AbstractCheckedDocument<BasicCheckedLink> {
     // TODO Should really add a CheckedLink type
 
     private boolean checked = false;
@@ -55,13 +55,13 @@ public class BasicCheckedDocument extends AbstractCheckedDocument<BasicLink> {
     }
 
     @Override
-    public BasicLink createLink(String path, String text, int line, int column) {
-        return new BasicLink(path, text, line, column);
+    public BasicCheckedLink createLink(String path, String text, int line, int column) {
+        return new BasicCheckedLink(path, text, line, column);
     }
 
     @Override
-    public BasicLink createLink(String path, int line, int column) {
-        return new BasicLink(path, line, column);
+    public BasicCheckedLink createLink(String path, int line, int column) {
+        return new BasicCheckedLink(path, line, column);
     }
 
     /*

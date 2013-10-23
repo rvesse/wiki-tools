@@ -28,11 +28,9 @@ import org.dotnetrdf.wiki.data.links.Link;
  * Interface for classes which can detect links in a page
  * 
  * @author rvesse
- * @param <T>
- *            Link type
  * 
  */
-public interface LinkDetector<T extends Link> {
+public interface LinkDetector {
 
     /**
      * Finds links in the page
@@ -42,5 +40,5 @@ public interface LinkDetector<T extends Link> {
      * @param text
      *            Document Text
      */
-    void findLinks(Document<T> doc, String text);
+    <T extends Link> void findLinks(Document<T> doc, String text);
 }
