@@ -30,7 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * Link Detector for Creole pages
@@ -159,7 +159,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
                 refId = linkText;
 
             if (references.containsKey(refId)) {
-                page.addOutboundLink(new Link(references.get(refId), linkText, line, col));
+                page.addOutboundLink(new BasicLink(references.get(refId), linkText, line, col));
             }
             // TODO Really should handle missing targets somehow
         }
@@ -179,7 +179,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
             // Track as a link
             String linkText = linkMatch.group(1);
             String linkPath = linkMatch.group(2);
-            page.addOutboundLink(new Link(linkPath, linkText, line, col));
+            page.addOutboundLink(new BasicLink(linkPath, linkText, line, col));
         }
 
         // Finally find auto links
@@ -199,7 +199,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
                 continue;
 
             // Track as link
-            page.addOutboundLink(new Link(linkMatch.group(1), line, col));
+            page.addOutboundLink(new BasicLink(linkMatch.group(1), line, col));
         }
     }
 

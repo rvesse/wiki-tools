@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker.documents;
+package org.dotnetrdf.wiki.checker;
 
 import java.io.File;
 import java.io.FileReader;
@@ -43,7 +43,7 @@ import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.dotnetrdf.wiki.parser.links.LinkDetector;
 import org.dotnetrdf.wiki.parser.links.LinkDetectorRegistry;
 import org.slf4j.Logger;
@@ -152,9 +152,9 @@ public class DocumentChecker<T extends CheckedDocument> {
             }
 
             // 4 - Check Links
-            Iterator<Link> links = document.getOutboundLinks();
+            Iterator<BasicLink> links = document.getOutboundLinks();
             while (links.hasNext()) {
-                Link link = links.next();
+                BasicLink link = links.next();
 
                 // Issue warnings for links without friendly text
                 if (!link.hasFriendlyText() && (!link.isWikiLink() || link.getPath().contains("/"))) {

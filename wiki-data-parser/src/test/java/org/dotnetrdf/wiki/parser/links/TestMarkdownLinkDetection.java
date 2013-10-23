@@ -27,6 +27,7 @@ import java.util.Iterator;
 import org.dotnetrdf.wiki.data.documents.BasicDocument;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.dotnetrdf.wiki.data.links.Link;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -46,7 +47,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks01() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link
@@ -64,7 +65,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks02() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with optional angle brackets
@@ -82,7 +83,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks03() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with leading spaces before ID
@@ -100,7 +101,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks04() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with leading tabs before ID
@@ -118,7 +119,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks05() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with leading spaces before ID
@@ -135,7 +136,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks06() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with title
@@ -153,7 +154,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks07() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with title
@@ -171,7 +172,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks08() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link with title
@@ -189,7 +190,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks09() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link
@@ -205,7 +206,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks10() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link using more complex reference
@@ -223,7 +224,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks11() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link using implicit reference
@@ -241,7 +242,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks12() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Not a reference link because the link is escaped
@@ -256,7 +257,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks13() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link
@@ -274,7 +275,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks14() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Multiple reference links
@@ -282,7 +283,7 @@ public class TestMarkdownLinkDetection {
         linkDetector.findLinks(doc, text);
 
         Assert.assertEquals(doc.getOutboundLinkCount(), 2);
-        Iterator<Link> iter = doc.getOutboundLinks();
+        Iterator<BasicLink> iter = doc.getOutboundLinks();
         Link link = iter.next();
         if (link.getText().equals("A")) {
             Assert.assertEquals(link.getText(), "A");
@@ -306,7 +307,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks15() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Not a reference link because the link is escaped
@@ -321,7 +322,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks16() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple reference link, the escape is for a backslash not for the [
@@ -339,7 +340,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks17() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Single reference links since second is escaped
@@ -357,7 +358,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void referenceLinks18() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Single reference links since first is escaped
@@ -375,7 +376,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void inlineLinks01() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple inline link
@@ -393,7 +394,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void inlineLinks02() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple inline link
@@ -411,7 +412,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void inlineLinks03() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple inline link
@@ -429,7 +430,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void inlineLinks04() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple inline link
@@ -447,7 +448,7 @@ public class TestMarkdownLinkDetection {
      */
     @Test
     public void autoLinks01() {
-        Document doc = new BasicDocument("Home.wiki", Format.CREOLE);
+        Document<BasicLink> doc = new BasicDocument("Home.wiki", Format.CREOLE);
         Assert.assertEquals(doc.getOutboundLinkCount(), 0);
 
         // Simple inline link

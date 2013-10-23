@@ -1,124 +1,65 @@
-/**
- * Copyright (c) 2013 dotNetRDF Project (dotnetrdf-develop@lists.sf.net)
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+/*
+ * Copyright 2013 YarcData LLC All Rights Reserved.
  */
 
 package org.dotnetrdf.wiki.data.links;
 
 /**
- * Represents a link on the wiki
+ * Interface for links
+ * 
  * @author rvesse
- *
+ * 
  */
-public class Link {
+public interface Link {
 
-    private String path, text;
-    private int line = 0, column = 0;
-    
-    /**
-     * Creates a link
-     * @param path Path
-     * @param text Display Text
-     * @param line Line
-     * @param column Column
-     */
-    public Link(String path, String text, int line, int column) {
-        this.path = path;
-        this.text = text;
-        this.line = line;
-        this.column = column;
-    }
-    
-    /**
-     * Creates a link
-     * @param path Path
-     * @param line Line
-     * @param column Column
-     */
-    public Link(String path, int line, int column) {
-        this(path, path, line, column);
-    }
-    
     /**
      * Gets the path i.e. URL of the link, may be absolute or relative
+     * 
      * @return Path
      */
-    public String getPath() {
-        return this.path;
-    }
-    
+    public abstract String getPath();
+
     /**
      * Gets whether this is a wiki link
+     * 
      * @return True if a wiki link, false otherwise
      */
-    public boolean isWikiLink() {
-        //TODO: Make this a regex based check to see if the path has a scheme component
-        return !this.path.startsWith("http") && !this.path.startsWith("mailto:");
-    }
-    
+    public abstract boolean isWikiLink();
+
     /**
      * Gets whether this is an email link
+     * 
      * @return True if an email link, false otherwise
      */
-    public boolean isMailLink() {
-        return this.path.startsWith("mailto:");
-    }
-    
+    public abstract boolean isMailLink();
+
     /**
      * Gets the display text of the link
+     * 
      * @return Display Text
      */
-    public String getText() {
-        return this.text;
-    }
-    
+    public abstract String getText();
+
     /**
      * Does the link have friendly text?
-     * @return Returns true if the display text for the link differs from the actual link, false otherwise
+     * 
+     * @return Returns true if the display text for the link differs from the
+     *         actual link, false otherwise
      */
-    public boolean hasFriendlyText() {
-        return !this.text.equals(this.path);
-    }
-    
+    public abstract boolean hasFriendlyText();
+
     /**
      * Gets the line the link occurs on
+     * 
      * @return Line
      */
-    public int getLine() {
-        return this.line;
-    }
-    
+    public abstract int getLine();
+
     /**
      * Gets the column the link occurs at
+     * 
      * @return Column
      */
-    public int getColumn() {
-        return this.column;
-    }
-    
-    @Override
-    public String toString() {
-        return this.text + (this.text.equals(this.path) ? "" : "(" + this.path + ")") + " [Line " + this.line + " Column " + this.column + "]";
-    }
-    
-    @Override
-    public int hashCode() {
-        return this.path.hashCode() ^ (this.hasFriendlyText() ? this.text.hashCode() : "".hashCode()) ^ this.line ^ this.column;
-    }
+    public abstract int getColumn();
+
 }

@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * Link Detector for Creole pages
@@ -55,9 +55,9 @@ public class CreoleLinkDetector extends BaseLinkDetector {
                 String linkPath = linkText.substring(0, linkText.lastIndexOf('|'));
                 String linkFriendlyText = linkText.substring(linkText.lastIndexOf('|') + 1);
 
-                page.addOutboundLink(new Link(linkPath, linkFriendlyText, line, col));
+                page.addOutboundLink(new BasicLink(linkPath, linkFriendlyText, line, col));
             } else {
-                page.addOutboundLink(new Link(linkText, line, col));
+                page.addOutboundLink(new BasicLink(linkText, line, col));
             }
         }
     }

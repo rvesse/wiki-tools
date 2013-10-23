@@ -22,18 +22,25 @@
 package org.dotnetrdf.wiki.parser.links;
 
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Interface for classes which can detect links in a page
+ * 
  * @author rvesse
- *
+ * @param <T>
+ *            Link type
+ * 
  */
-public interface LinkDetector {
+public interface LinkDetector<T extends Link> {
 
     /**
      * Finds links in the page
-     * @param page Page
-     * @param text Page Text
+     * 
+     * @param page
+     *            Page
+     * @param text
+     *            Page Text
      */
-    void findLinks(Document page, String text);
+    void findLinks(Document<T> page, String text);
 }

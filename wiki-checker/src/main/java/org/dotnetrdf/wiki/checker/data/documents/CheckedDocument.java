@@ -27,8 +27,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.dotnetrdf.wiki.data.documents.BasicDocument;
+import org.dotnetrdf.wiki.data.documents.AbstractDocument;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * A document which can be checked and have issues logged against it
@@ -36,8 +37,9 @@ import org.dotnetrdf.wiki.data.documents.formats.Format;
  * @author rvesse
  * 
  */
-public class CheckedDocument extends BasicDocument {
-
+public class CheckedDocument extends AbstractDocument<BasicLink> {
+    // TODO Should really add a CheckedLink type
+    
     private boolean checked = false;
     private List<Issue> issues = new ArrayList<Issue>();
 

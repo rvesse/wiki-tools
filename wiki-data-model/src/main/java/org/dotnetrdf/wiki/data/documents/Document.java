@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.data.documents;
 
@@ -31,9 +31,11 @@ import org.dotnetrdf.wiki.data.links.Link;
  * Interface for representing wiki documents
  * 
  * @author rvesse
+ * @param <T>
+ *            Link type
  * 
  */
-public interface Document {
+public interface Document<T extends Link> {
 
     /**
      * Gets the path of the page
@@ -69,14 +71,14 @@ public interface Document {
      * @param link
      *            Outbound Link
      */
-    public abstract void addOutboundLink(Link link);
+    public abstract void addOutboundLink(T link);
 
     /**
      * Gets the outbound links for the page
      * 
      * @return Outbound Links
      */
-    public abstract Iterator<Link> getOutboundLinks();
+    public abstract Iterator<T> getOutboundLinks();
 
     /**
      * Adds an inbound link to the page
@@ -84,14 +86,14 @@ public interface Document {
      * @param link
      *            Inbound Link
      */
-    public abstract void addInboundLink(Link link);
+    public abstract void addInboundLink(T link);
 
     /**
      * Gets the inbound links for the page
      * 
      * @return Inbound Links
      */
-    public abstract Iterator<Link> getInboundLinks();
+    public abstract Iterator<T> getInboundLinks();
 
     /**
      * Gets the number of links on the page

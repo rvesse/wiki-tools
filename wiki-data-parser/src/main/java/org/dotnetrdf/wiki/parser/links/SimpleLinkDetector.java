@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * Simple link detector for files, this simply finds http://, https:// and mailto: links in the text
@@ -52,7 +52,7 @@ public class SimpleLinkDetector extends BaseLinkDetector {
             // Find link information and track as a link
             String linkText = linkMatch.group().toString();
             linkText = linkText.substring(2, linkText.length() - 2);
-            page.addOutboundLink(new Link(linkText, line, col));
+            page.addOutboundLink(new BasicLink(linkText, line, col));
         }
     }
 

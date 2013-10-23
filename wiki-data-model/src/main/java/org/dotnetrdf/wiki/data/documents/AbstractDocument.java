@@ -26,20 +26,24 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.dotnetrdf.wiki.data.links.Link;
 
 /**
- * Basic representation of a document in a wiki
+ * Abstract implementation of the {@link Document} interface which leaves the
+ * choice of link type up to derived implementations
  * 
  * @author rvesse
+ * @param <T>
+ *            Link type
  * 
  */
-public class BasicDocument implements Document {
+public abstract class AbstractDocument<T extends BasicLink> implements Document<T> {
 
     private String path;
     private String filename;
-    protected Set<Link> links = new HashSet<Link>();
-    protected Set<Link> inboundLinks = new HashSet<Link>();
+    protected Set<T> links = new HashSet<T>();
+    protected Set<T> inboundLinks = new HashSet<T>();
     protected Format format;
 
     /**
@@ -50,7 +54,7 @@ public class BasicDocument implements Document {
      * @param format
      *            Format of the document
      */
-    public BasicDocument(String path, Format format) {
+    public AbstractDocument(String path, Format format) {
         this.path = path;
         this.filename = path.replace('/', File.separatorChar);
         this.format = format;
@@ -61,7 +65,9 @@ public class BasicDocument implements Document {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getPath()
      */
     @Override
@@ -69,7 +75,9 @@ public class BasicDocument implements Document {
         return this.path;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getFilename()
      */
     @Override
@@ -77,7 +85,9 @@ public class BasicDocument implements Document {
         return this.filename;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getFormat()
      */
     @Override
@@ -85,7 +95,9 @@ public class BasicDocument implements Document {
         return this.format;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#isTopLevel()
      */
     @Override
@@ -93,39 +105,53 @@ public class BasicDocument implements Document {
         return !this.path.contains("/");
     }
 
-    /* (non-Javadoc)
-     * @see org.dotnetrdf.wiki.data.documents.Document#addOutboundLink(org.dotnetrdf.wiki.data.links.Link)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dotnetrdf.wiki.data.documents.Document#addOutboundLink(org.dotnetrdf
+     * .wiki.data.links.Link)
      */
     @Override
-    public void addOutboundLink(Link link) {
+    public void addOutboundLink(T link) {
         this.links.add(link);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundLinks()
      */
     @Override
-    public Iterator<Link> getOutboundLinks() {
+    public Iterator<T> getOutboundLinks() {
         return this.links.iterator();
     }
 
-    /* (non-Javadoc)
-     * @see org.dotnetrdf.wiki.data.documents.Document#addInboundLink(org.dotnetrdf.wiki.data.links.Link)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dotnetrdf.wiki.data.documents.Document#addInboundLink(org.dotnetrdf
+     * .wiki.data.links.Link)
      */
     @Override
-    public void addInboundLink(Link link) {
+    public void addInboundLink(T link) {
         this.inboundLinks.add(link);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getInboundLinks()
      */
     @Override
-    public Iterator<Link> getInboundLinks() {
+    public Iterator<T> getInboundLinks() {
         return this.inboundLinks.iterator();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundLinkCount()
      */
     @Override
@@ -133,8 +159,11 @@ public class BasicDocument implements Document {
         return this.links.size();
     }
 
-    /* (non-Javadoc)
-     * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundWikiLinkCount()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dotnetrdf.wiki.data.documents.Document#getOutboundWikiLinkCount()
      */
     @Override
     public int getOutboundWikiLinkCount() {
@@ -146,8 +175,11 @@ public class BasicDocument implements Document {
         return count;
     }
 
-    /* (non-Javadoc)
-     * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundExternalLinkCount()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.dotnetrdf.wiki.data.documents.Document#getOutboundExternalLinkCount()
      */
     @Override
     public int getOutboundExternalLinkCount() {
@@ -159,7 +191,9 @@ public class BasicDocument implements Document {
         return count;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.dotnetrdf.wiki.data.documents.Document#getInboundLinkCount()
      */
     @Override

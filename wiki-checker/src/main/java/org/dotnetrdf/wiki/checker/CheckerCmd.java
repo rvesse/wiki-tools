@@ -35,7 +35,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
-import org.dotnetrdf.wiki.checker.documents.DocumentChecker;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.slf4j.LoggerFactory;
