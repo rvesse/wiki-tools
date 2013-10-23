@@ -22,16 +22,20 @@
 package org.dotnetrdf.wiki.parser.links;
 
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * A link detector that does nothing, used for formats that do not allow links
+ * 
  * @author rvesse
- *
+ * @param <T>
+ *            Link type
+ * 
  */
-public class NoLinkDetector implements LinkDetector {
+public class NoLinkDetector<T extends Link> implements LinkDetector<T> {
 
     @Override
-    public void findLinks(Document page, String text) {
+    public void findLinks(Document<T> page, String text) {
         // No-op
     }
 }

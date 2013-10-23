@@ -18,23 +18,26 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.data;
 
 import java.util.Iterator;
 
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Represents a wiki which is a collection of documents
  * 
  * @author rvesse
- * @param <T>
+ * @param <TLink>
+ *            Link type
+ * @param <TDoc>
  *            Document type
  * 
  */
-public interface Wiki<T extends Document> {
+public interface Wiki<TLink extends Link, TDoc extends Document<TLink>> {
 
     /**
      * Adds a document
@@ -42,7 +45,7 @@ public interface Wiki<T extends Document> {
      * @param document
      *            Document
      */
-    public void addDocument(T document);
+    public void addDocument(TDoc document);
 
     /**
      * Gets whether a document with the given path exists
@@ -60,14 +63,14 @@ public interface Wiki<T extends Document> {
      *            Wiki Link Path
      * @return Page or null if no such document
      */
-    public T getDocument(String linkPath);
+    public TDoc getDocument(String linkPath);
 
     /**
      * Gets the documents that are known to exist
      * 
      * @return Documents
      */
-    public Iterator<T> getDocuments();
+    public Iterator<TDoc> getDocuments();
 
     /**
      * Gets the document count

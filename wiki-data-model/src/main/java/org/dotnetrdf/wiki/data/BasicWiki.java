@@ -27,20 +27,22 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * A basic representation of a wiki
  * 
  * @author rvesse
+ * @param <TLink> Link type
  * 
- * @param <T> Document type
+ * @param <TDoc> Document type
  */
-public class BasicWiki<T extends Document> implements Wiki<T> {
+public class BasicWiki<TLink extends Link, TDoc extends Document<TLink>> implements Wiki<TLink, TDoc> {
 
     /**
      * Map of wiki paths to documents
      */
-    protected Map<String, T> documents = new HashMap<String, T>();
+    protected Map<String, TDoc> documents = new HashMap<String, TDoc>();
 
     /**
      * Adds a document
@@ -48,7 +50,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      * @param document
      *            Document
      */
-    public void addDocument(T document) {
+    public void addDocument(TDoc document) {
         this.documents.put(document.getPath(), document);
     }
 
@@ -70,7 +72,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      *            Wiki Link Path
      * @return Page or null if no such document
      */
-    public T getDocument(String linkPath) {
+    public TDoc getDocument(String linkPath) {
         return this.documents.get(linkPath);
     }
 
@@ -79,7 +81,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      * 
      * @return Documents
      */
-    public Iterator<T> getDocuments() {
+    public Iterator<TDoc> getDocuments() {
         return this.documents.values().iterator();
     }
 
@@ -99,7 +101,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      */
     public int getTotalLinks() {
         int count = 0;
-        for (T document : this.documents.values()) {
+        for (TDoc document : this.documents.values()) {
             count += document.getOutboundLinkCount();
         }
         return count;
@@ -112,7 +114,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      */
     public int getTotalWikiLinks() {
         int count = 0;
-        for (T document : this.documents.values()) {
+        for (TDoc document : this.documents.values()) {
             count += document.getOutboundWikiLinkCount();
         }
         return count;
@@ -125,7 +127,7 @@ public class BasicWiki<T extends Document> implements Wiki<T> {
      */
     public int getTotalExternalLinks() {
         int count = 0;
-        for (T document : this.documents.values()) {
+        for (TDoc document : this.documents.values()) {
             count += document.getOutboundExternalLinkCount();
         }
         return count;

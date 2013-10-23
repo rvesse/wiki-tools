@@ -66,6 +66,34 @@ public interface Document<T extends Link> {
     public abstract boolean isTopLevel();
 
     /**
+     * Creates a link
+     * 
+     * @param path
+     *            Link Path
+     * @param text
+     *            Friendly text for the link
+     * @param line
+     *            Line the link occurs at
+     * @param column
+     *            Column the link occurs at
+     * @return Link
+     */
+    public abstract T createLink(String path, String text, int line, int column);
+
+    /**
+     * Creates a link
+     * 
+     * @param path
+     *            Link path
+     * @param line
+     *            Line the link occurs at
+     * @param column
+     *            Column the link occurs at
+     * @return Link
+     */
+    public abstract T createLink(String path, int line, int column);
+
+    /**
      * Adds an outbound link to the page
      * 
      * @param link

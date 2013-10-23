@@ -104,7 +104,7 @@ public abstract class AbstractDocument<T extends BasicLink> implements Document<
     public boolean isTopLevel() {
         return !this.path.contains("/");
     }
-
+    
     /*
      * (non-Javadoc)
      * 

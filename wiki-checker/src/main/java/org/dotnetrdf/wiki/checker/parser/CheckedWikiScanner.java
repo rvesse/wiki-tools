@@ -27,6 +27,7 @@ import java.io.File;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
 
 /**
@@ -36,7 +37,7 @@ import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
  * 
  * @param <T> Document type
  */
-public class CheckedWikiScanner<T extends CheckedDocument> extends AbstractWikiScanner<T> {
+public class CheckedWikiScanner<T extends CheckedDocument> extends AbstractWikiScanner<BasicLink, T> {
 
     @SuppressWarnings("unchecked")
     @Override

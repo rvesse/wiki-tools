@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.data.documents;
 
@@ -39,7 +39,7 @@ import org.dotnetrdf.wiki.data.links.BasicLink;
  */
 public class CheckedDocument extends AbstractDocument<BasicLink> {
     // TODO Should really add a CheckedLink type
-    
+
     private boolean checked = false;
     private List<Issue> issues = new ArrayList<Issue>();
 
@@ -53,6 +53,16 @@ public class CheckedDocument extends AbstractDocument<BasicLink> {
      */
     public CheckedDocument(String path, Format format) {
         super(path, format);
+    }
+
+    @Override
+    public BasicLink createLink(String path, String text, int line, int column) {
+        return new BasicLink(path, text, line, column);
+    }
+
+    @Override
+    public BasicLink createLink(String path, int line, int column) {
+        return new BasicLink(path, line, column);
     }
 
     /**

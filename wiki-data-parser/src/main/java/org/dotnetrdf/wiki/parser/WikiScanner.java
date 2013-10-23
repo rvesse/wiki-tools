@@ -24,17 +24,19 @@ package org.dotnetrdf.wiki.parser;
 import java.io.FileNotFoundException;
 import org.dotnetrdf.wiki.data.Wiki;
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Interface for wiki scanners which take in a directory and populate a
  * {@link Wiki} instance
  * 
  * @author rvesse
- * @param <T>
+ * @param <TLink> Link type
+ * @param <TDoc>
  *            Document type
  * 
  */
-public interface WikiScanner<T extends Document> {
+public interface WikiScanner<TLink extends Link, TDoc extends Document<TLink>> {
 
     /**
      * Discovers documents in the wiki by scanning a directory
@@ -46,6 +48,6 @@ public interface WikiScanner<T extends Document> {
      * @throws FileNotFoundException
      *             Thrown if the specified directory does not exist
      */
-    public void scan(Wiki<T> wiki, String directory) throws FileNotFoundException;
+    public void scan(Wiki<TLink, TDoc> wiki, String directory) throws FileNotFoundException;
 
 }

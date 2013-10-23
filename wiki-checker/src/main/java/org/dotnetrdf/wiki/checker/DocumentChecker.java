@@ -54,15 +54,15 @@ import org.slf4j.LoggerFactory;
  * documents
  * 
  * @author rvesse
- * @param <T>
+ * @param <TDoc>
  *            Checked document type
  * 
  */
-public class DocumentChecker<T extends CheckedDocument> {
+public class DocumentChecker<TDoc extends CheckedDocument> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentChecker.class);
 
-    private CheckedWiki<T> wiki;
+    private CheckedWiki<TDoc> wiki;
     private String baseDir;
     private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
     private Map<String, Integer> httpStatuses = new HashMap<String, Integer>();
@@ -77,7 +77,7 @@ public class DocumentChecker<T extends CheckedDocument> {
      * @param dir
      *            Base Directory
      */
-    public DocumentChecker(CheckedWiki<T> wiki, String dir) {
+    public DocumentChecker(CheckedWiki<TDoc> wiki, String dir) {
         this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))
@@ -89,7 +89,7 @@ public class DocumentChecker<T extends CheckedDocument> {
      * 
      * @return Wiki
      */
-    public CheckedWiki<T> getWiki() {
+    public CheckedWiki<TDoc> getWiki() {
         return this.wiki;
     }
 
@@ -111,9 +111,9 @@ public class DocumentChecker<T extends CheckedDocument> {
         LOGGER.info("Checking for per-document issues");
         
         // Start checking documents
-        Iterator<T> documents = this.wiki.getDocuments();
+        Iterator<TDoc> documents = this.wiki.getDocuments();
         while (documents.hasNext()) {
-            T document = documents.next();
+            TDoc document = documents.next();
 
             if (document.hasBeenChecked())
                 continue;
@@ -166,7 +166,7 @@ public class DocumentChecker<T extends CheckedDocument> {
                 if (link.isWikiLink()) {
                     // Wiki Link Validation
                     String linkPath = link.getPath();
-                    T target = this.wiki.getDocument(linkPath);
+                    TDoc target = this.wiki.getDocument(linkPath);
                     if (target == null) {
                         // Mark as Broken
                         document.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
@@ -305,7 +305,7 @@ public class DocumentChecker<T extends CheckedDocument> {
         // Check for orphaned/poorly linked documents
         documents = this.wiki.getDocuments();
         while (documents.hasNext()) {
-            T document = documents.next();
+            TDoc document = documents.next();
             if (document.getFormat().isWiki()) {
                 if (document.getInboundLinkCount() == 0) {
                     document.addIssue(new Issue("Page is isolated,  no inbound links to this document were found", true));

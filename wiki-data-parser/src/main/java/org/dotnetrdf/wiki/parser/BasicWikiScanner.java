@@ -26,6 +26,7 @@ import java.io.File;
 
 import org.dotnetrdf.wiki.data.documents.BasicDocument;
 import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * A wiki scanner that populates a basic wiki
@@ -35,7 +36,7 @@ import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
  * @param <T>
  *            Document type
  */
-public class BasicWikiScanner<T extends BasicDocument> extends AbstractWikiScanner<T> {
+public class BasicWikiScanner<T extends BasicDocument> extends AbstractWikiScanner<BasicLink, T> {
 
     @SuppressWarnings("unchecked")
     @Override

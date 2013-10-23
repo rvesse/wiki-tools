@@ -29,12 +29,33 @@ package org.dotnetrdf.wiki.data.documents.formats;
  */
 public class Format {
     
+    /**
+     * Constant for unknown format
+     */
     public static Format UNKNOWN = new Format(DataFormat.UNKNOWN, "Unknown Format", false, false);
+    /**
+     * Constant for Creole format
+     */
     public static Format CREOLE = new Format(DataFormat.CREOLE, "Creole");
+    /**
+     * Constant for Markdown format
+     */
     public static Format MARKDOWN = new Format(DataFormat.MARKDOWN, "Markdown");
+    /**
+     * Constant for Restructured text format
+     */
     public static Format RESTRUCTURED_TEXT = new Format(DataFormat.RESTRUCTURED_TEXT, "reStructuredText");
+    /**
+     * Constant for Textile format
+     */
     public static Format TEXTILE = new Format(DataFormat.TEXTILE, "Textile");
+    /**
+     * Constant for plain text format
+     */
     public static Format PLAIN_TEXT = new Format(DataFormat.PLAIN_TEXT, "Plain Text", true, false);
+    /**
+     * Constant for image formats
+     */
     public static Format IMAGE = new Format(DataFormat.IMAGE, "Image", false, false);
     
 

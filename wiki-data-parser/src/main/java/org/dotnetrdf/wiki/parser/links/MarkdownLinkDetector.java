@@ -30,15 +30,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.BasicLink;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Link Detector for Creole pages
  * 
  * @author rvesse
+ * @param <T>
+ *            Link type
  * 
  */
-public class MarkdownLinkDetector extends BaseLinkDetector {
+public class MarkdownLinkDetector<T extends Link> extends BaseLinkDetector<T> {
 
     private Pattern referencesRegex = Pattern.compile("\\[([^\\]]+)\\]:\\s+([^\\s]+)(\\s+(\"[^\"]+\"|'[^']+'|\\([^\\(]+\\)))?",
             Pattern.MULTILINE);
@@ -99,7 +101,8 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
             if (this.isPreformattedLine(lineData, line)) {
                 start += find.length();
             } else {
-                lineData[line - 1] = lineData[line - 1].substring(0, column - 1) + replace + lineData[line - 1].substring(column - 1 + find.length());
+                lineData[line - 1] = lineData[line - 1].substring(0, column - 1) + replace
+                        + lineData[line - 1].substring(column - 1 + find.length());
                 text = text.substring(0, index) + replace + text.substring(index + find.length());
                 start += replace.length();
             }
@@ -110,7 +113,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
     }
 
     @Override
-    public void findLinks(Document page, String text) {
+    public void findLinks(Document<T> doc, String text) {
         // Apply relevant escapes
         String[] lineData = text.split("\n");
         text = applyMarkdownEscapes(lineData, text);
@@ -159,7 +162,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
                 refId = linkText;
 
             if (references.containsKey(refId)) {
-                page.addOutboundLink(new BasicLink(references.get(refId), linkText, line, col));
+                doc.addOutboundLink(doc.createLink(references.get(refId), linkText, line, col));
             }
             // TODO Really should handle missing targets somehow
         }
@@ -179,7 +182,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
             // Track as a link
             String linkText = linkMatch.group(1);
             String linkPath = linkMatch.group(2);
-            page.addOutboundLink(new BasicLink(linkPath, linkText, line, col));
+            doc.addOutboundLink(doc.createLink(linkPath, linkText, line, col));
         }
 
         // Finally find auto links
@@ -199,7 +202,7 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
                 continue;
 
             // Track as link
-            page.addOutboundLink(new BasicLink(linkMatch.group(1), line, col));
+            doc.addOutboundLink(doc.createLink(linkMatch.group(1), line, col));
         }
     }
 

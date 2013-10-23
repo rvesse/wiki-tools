@@ -40,7 +40,7 @@ import org.testng.annotations.Test;
  */
 public class TestMarkdownLinkDetection {
 
-    private LinkDetector linkDetector = new MarkdownLinkDetector();
+    private LinkDetector<BasicLink> linkDetector = new MarkdownLinkDetector<BasicLink>();
 
     /**
      * Tests reference link detection
@@ -334,7 +334,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "Test");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */
@@ -352,7 +352,7 @@ public class TestMarkdownLinkDetection {
         Assert.assertEquals(link.getText(), "A");
         Assert.assertEquals(link.getPath(), "http://example.org");
     }
-    
+
     /**
      * Tests reference link detection
      */

@@ -21,18 +21,25 @@
 
 package org.dotnetrdf.wiki.parser.links;
 
+import org.dotnetrdf.wiki.data.links.Link;
+
 /**
  * Abstract base implementation of a link detector
+ * 
  * @author rvesse
- *
+ * @param <T>
+ *            Link type
+ * 
  */
-public abstract class BaseLinkDetector implements LinkDetector {
-
+public abstract class BaseLinkDetector<T extends Link> implements LinkDetector<T> {
 
     /**
      * Calculates the line number from an offset
-     * @param lines Line data
-     * @param offset Offset
+     * 
+     * @param lines
+     *            Line data
+     * @param offset
+     *            Offset
      * @return Line Number
      */
     protected final int calculateLine(String[] lines, int offset) {
@@ -50,8 +57,11 @@ public abstract class BaseLinkDetector implements LinkDetector {
 
     /**
      * Calculates a column number from an offset
-     * @param lines Line data
-     * @param offset Offset
+     * 
+     * @param lines
+     *            Line data
+     * @param offset
+     *            Offset
      * @return Column Number
      */
     protected final int calculateColumn(String[] lines, int offset) {

@@ -26,19 +26,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.links.BasicLink;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Link Detector for Creole pages
+ * 
  * @author rvesse
- *
+ * @param <T>
+ *            Link type
+ * 
  */
-public class CreoleLinkDetector extends BaseLinkDetector {
+public class CreoleLinkDetector<T extends Link> extends BaseLinkDetector<T> {
 
     private Pattern linkRegex = Pattern.compile("\\[\\[[^\\]]+\\]\\]");
 
     @Override
-    public void findLinks(Document page, String text) {
+    public void findLinks(Document<T> doc, String text) {
         String[] lineData = text.split("\n");
         Matcher linkMatcher = linkRegex.matcher(text);
         while (linkMatcher.find()) {
@@ -55,9 +58,9 @@ public class CreoleLinkDetector extends BaseLinkDetector {
                 String linkPath = linkText.substring(0, linkText.lastIndexOf('|'));
                 String linkFriendlyText = linkText.substring(linkText.lastIndexOf('|') + 1);
 
-                page.addOutboundLink(new BasicLink(linkPath, linkFriendlyText, line, col));
+                doc.addOutboundLink(doc.createLink(linkPath, linkFriendlyText, line, col));
             } else {
-                page.addOutboundLink(new BasicLink(linkText, line, col));
+                doc.addOutboundLink(doc.createLink(linkText, line, col));
             }
         }
     }

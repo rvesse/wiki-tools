@@ -24,6 +24,7 @@ package org.dotnetrdf.wiki.checker.data;
 
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.data.BasicWiki;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
  * Represents a wiki composed of documents which may be checked and have issues
@@ -31,9 +32,9 @@ import org.dotnetrdf.wiki.data.BasicWiki;
  * 
  * @author rvesse
  * 
- * @param <T>
+ * @param <T> Checked document type
  */
-public class CheckedWiki<T extends CheckedDocument> extends BasicWiki<T> {
+public class CheckedWiki<T extends CheckedDocument> extends BasicWiki<BasicLink, T> {
 
     /**
      * Gets the total number of errors

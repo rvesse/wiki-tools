@@ -37,10 +37,10 @@ public interface LinkDetector<T extends Link> {
     /**
      * Finds links in the page
      * 
-     * @param page
-     *            Page
+     * @param doc
+     *            Document
      * @param text
-     *            Page Text
+     *            Document Text
      */
-    void findLinks(Document<T> page, String text);
+    void findLinks(Document<T> doc, String text);
 }

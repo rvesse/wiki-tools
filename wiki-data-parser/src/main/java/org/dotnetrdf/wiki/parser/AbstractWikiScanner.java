@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import org.dotnetrdf.wiki.data.Wiki;
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.links.Link;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,15 +34,17 @@ import org.slf4j.LoggerFactory;
  * to derived implementations
  * 
  * @author rvesse
- * @param <T>
+ * @param <TLink>
+ *            Link type
+ * @param <TDoc>
  *            Document type
  * 
  */
-public abstract class AbstractWikiScanner<T extends Document> implements WikiScanner<T> {
+public abstract class AbstractWikiScanner<TLink extends Link, TDoc extends Document<TLink>> implements WikiScanner<TLink, TDoc> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiScanner.class);
 
-    public final void scan(Wiki<T> wiki, String directory) throws FileNotFoundException {
+    public final void scan(Wiki<TLink, TDoc> wiki, String directory) throws FileNotFoundException {
         File dir = new File(directory);
         if (dir.exists() && dir.isDirectory()) {
             this.scan(wiki, "", dir, true);
@@ -60,7 +63,7 @@ public abstract class AbstractWikiScanner<T extends Document> implements WikiSca
      * @param top
      *            Whether this is the top level directory
      */
-    private void scan(Wiki<T> wiki, String basePath, File dir, boolean top) {
+    private void scan(Wiki<TLink, TDoc> wiki, String basePath, File dir, boolean top) {
         // Ignore hidden directories
         if (dir.getPath().contains("."))
             return;
@@ -74,7 +77,7 @@ public abstract class AbstractWikiScanner<T extends Document> implements WikiSca
                 this.scan(wiki, basePath + (top ? "" : dir.getName() + "/"), f, false);
             } else {
                 // Create document and add to wiki
-                T document = createDocument(basePath + (top ? "" : dir.getName() + "/") + f.getName(), f);
+                TDoc document = createDocument(basePath + (top ? "" : dir.getName() + "/") + f.getName(), f);
                 if (!wiki.hasDocument(document.getPath())) {
                     LOGGER.info("Found document " + document.getPath());
                     wiki.addDocument(document);
@@ -85,6 +88,6 @@ public abstract class AbstractWikiScanner<T extends Document> implements WikiSca
         LOGGER.info("Finished Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
     }
 
-    protected abstract T createDocument(String wikiPath, File f);
+    protected abstract TDoc createDocument(String wikiPath, File f);
 
 }
