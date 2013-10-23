@@ -6,16 +6,18 @@ package org.dotnetrdf.wiki.checker.checks;
 
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Interface for document checks
  * 
  * @author rvesse
- * 
- * @param <T>
+ * @param <TLink>
+ *            Checked link type
+ * @param <TDoc>
  *            Checked document type
  */
-public interface DocumentCheck<T extends CheckedDocument> {
+public interface DocumentCheck<TLink extends Link, TDoc extends CheckedDocument<TLink>> {
 
     /**
      * Carries out a check on the document
@@ -27,5 +29,5 @@ public interface DocumentCheck<T extends CheckedDocument> {
      * @param wiki
      *            Wiki
      */
-    public void check(T document, String text, CheckedWiki<T> wiki);
+    public void check(TDoc document, String text, CheckedWiki<TLink, TDoc> wiki);
 }

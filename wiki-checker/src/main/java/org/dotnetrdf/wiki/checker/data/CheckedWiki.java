@@ -18,23 +18,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.data;
 
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.data.BasicWiki;
-import org.dotnetrdf.wiki.data.links.BasicLink;
+import org.dotnetrdf.wiki.data.links.Link;
 
 /**
  * Represents a wiki composed of documents which may be checked and have issues
  * logged against them
  * 
  * @author rvesse
- * 
- * @param <T> Checked document type
+ * @param <TLink>
+ *            Checked link type
+ * @param <TDoc>
+ *            Checked document type
  */
-public class CheckedWiki<T extends CheckedDocument> extends BasicWiki<BasicLink, T> {
+public class CheckedWiki<TLink extends Link, TDoc extends CheckedDocument<TLink>> extends BasicWiki<TLink, TDoc> {
 
     /**
      * Gets the total number of errors
@@ -43,7 +45,7 @@ public class CheckedWiki<T extends CheckedDocument> extends BasicWiki<BasicLink,
      */
     public int getTotalErrors() {
         int count = 0;
-        for (T document : this.documents.values()) {
+        for (TDoc document : this.documents.values()) {
             count += document.getErrorCount();
         }
         return count;
@@ -56,7 +58,7 @@ public class CheckedWiki<T extends CheckedDocument> extends BasicWiki<BasicLink,
      */
     public int getTotalWarnings() {
         int count = 0;
-        for (T document : this.documents.values()) {
+        for (TDoc document : this.documents.values()) {
             count += document.getWarningCount();
         }
         return count;

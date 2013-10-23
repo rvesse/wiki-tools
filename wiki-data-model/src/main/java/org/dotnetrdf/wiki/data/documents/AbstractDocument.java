@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.dotnetrdf.wiki.data.documents.formats.Format;
-import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.dotnetrdf.wiki.data.links.Link;
 
 /**
@@ -38,7 +37,7 @@ import org.dotnetrdf.wiki.data.links.Link;
  *            Link type
  * 
  */
-public abstract class AbstractDocument<T extends BasicLink> implements Document<T> {
+public abstract class AbstractDocument<T extends Link> implements Document<T> {
 
     private String path;
     private String filename;

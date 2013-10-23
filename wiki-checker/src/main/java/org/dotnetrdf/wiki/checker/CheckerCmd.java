@@ -34,9 +34,11 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -83,12 +85,12 @@ public class CheckerCmd {
                 Logger.getLogger("org.apache.http").setLevel(Level.WARN);
 
                 // Scan specified directory
-                CheckedWiki<CheckedDocument> wiki = new CheckedWiki<CheckedDocument>();
-                CheckedWikiScanner<CheckedDocument> scanner = new CheckedWikiScanner<CheckedDocument>();
+                CheckedWiki<BasicLink, BasicCheckedDocument> wiki = new CheckedWiki<BasicLink, BasicCheckedDocument>();
+                CheckedWikiScanner<BasicLink, BasicCheckedDocument> scanner = new CheckedWikiScanner<BasicLink, BasicCheckedDocument>();
                 scanner.scan(wiki, args[0]);
 
                 // Carry out checks
-                DocumentChecker<CheckedDocument> checker = new DocumentChecker<CheckedDocument>(wiki, args[0]);
+                DocumentChecker<BasicLink, BasicCheckedDocument> checker = new DocumentChecker<BasicLink, BasicCheckedDocument>(wiki, args[0]);
                 checker.run();
 
                 // Dump Report
@@ -118,18 +120,18 @@ public class CheckerCmd {
      *            issues will be reported on
      * @return
      */
-    private static String getReport(CheckedWiki<CheckedDocument> wiki, boolean warn, boolean quiet) {
+    private static String getReport(CheckedWiki<BasicLink, BasicCheckedDocument> wiki, boolean warn, boolean quiet) {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
 
-        Iterator<CheckedDocument> iter = wiki.getDocuments();
+        Iterator<BasicCheckedDocument> iter = wiki.getDocuments();
         pw.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
         pw.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and "
                 + wiki.getTotalExternalLinks() + " External Link(s)");
         pw.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
         pw.println();
         while (iter.hasNext()) {
-            CheckedDocument document = iter.next();
+            CheckedDocument<BasicLink> document = iter.next();
             if ((document.hasIssues() && (warn || document.hasErrors())) || !quiet) {
                 pw.println(document.toString());
             }

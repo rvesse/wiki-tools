@@ -44,6 +44,7 @@ import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.documents.Document;
 import org.dotnetrdf.wiki.data.documents.formats.DataFormat;
 import org.dotnetrdf.wiki.data.links.BasicLink;
+import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.parser.links.LinkDetector;
 import org.dotnetrdf.wiki.parser.links.LinkDetectorRegistry;
 import org.slf4j.Logger;
@@ -54,15 +55,17 @@ import org.slf4j.LoggerFactory;
  * documents
  * 
  * @author rvesse
+ * @param <TLink>
+ *            Checked link type
  * @param <TDoc>
  *            Checked document type
  * 
  */
-public class DocumentChecker<TDoc extends CheckedDocument> {
+public class DocumentChecker<TLink extends Link, TDoc extends CheckedDocument<TLink>> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DocumentChecker.class);
 
-    private CheckedWiki<TDoc> wiki;
+    private CheckedWiki<TLink, TDoc> wiki;
     private String baseDir;
     private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
     private Map<String, Integer> httpStatuses = new HashMap<String, Integer>();
@@ -77,7 +80,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
      * @param dir
      *            Base Directory
      */
-    public DocumentChecker(CheckedWiki<TDoc> wiki, String dir) {
+    public DocumentChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
         this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))
@@ -89,7 +92,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
      * 
      * @return Wiki
      */
-    public CheckedWiki<TDoc> getWiki() {
+    public CheckedWiki<TLink, TDoc> getWiki() {
         return this.wiki;
     }
 
@@ -109,7 +112,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
      */
     public void run() throws IOException {
         LOGGER.info("Checking for per-document issues");
-        
+
         // Start checking documents
         Iterator<TDoc> documents = this.wiki.getDocuments();
         while (documents.hasNext()) {
@@ -152,9 +155,9 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
             }
 
             // 4 - Check Links
-            Iterator<BasicLink> links = document.getOutboundLinks();
+            Iterator<TLink> links = document.getOutboundLinks();
             while (links.hasNext()) {
-                BasicLink link = links.next();
+                TLink link = links.next();
 
                 // Issue warnings for links without friendly text
                 if (!link.hasFriendlyText() && (!link.isWikiLink() || link.getPath().contains("/"))) {
@@ -292,7 +295,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
 
             // Finally mark as checked
             document.setChecked(true);
-            
+
             LOGGER.debug("Finished checking document " + document.getPath() + document.getFilename());
         }
         LOGGER.info("Finished checking for per-document wiki issues");
@@ -314,7 +317,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
                 }
             }
         }
-        
+
         LOGGER.info("Finished checking for global wiki issues");
     }
 
@@ -326,7 +329,7 @@ public class DocumentChecker<TDoc extends CheckedDocument> {
      * @return Text of the document, null for non-text formats
      * @throws IOException
      */
-    private String getText(Document document) throws IOException {
+    private String getText(Document<TLink> document) throws IOException {
         if (!document.getFormat().isText())
             return null;
 

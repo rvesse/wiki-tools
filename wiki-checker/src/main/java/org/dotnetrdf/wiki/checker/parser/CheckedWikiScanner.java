@@ -18,34 +18,38 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.parser;
 
 import java.io.File;
 
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
-import org.dotnetrdf.wiki.data.links.BasicLink;
+import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
 
 /**
  * Scans a directory to populate a {@link CheckedWiki}
  * 
  * @author rvesse
- * 
- * @param <T> Document type
+ * @param <TLink>
+ *            Checked link type
+ * @param <TDoc>
+ *            Checked document type
  */
-public class CheckedWikiScanner<T extends CheckedDocument> extends AbstractWikiScanner<BasicLink, T> {
+public class CheckedWikiScanner<TLink extends Link, TDoc extends CheckedDocument<TLink>> extends
+        AbstractWikiScanner<TLink, TDoc> {
 
     @SuppressWarnings("unchecked")
     @Override
-    protected T createDocument(String wikiPath, File f) {
+    protected TDoc createDocument(String wikiPath, File f) {
         // Unchecked warning is kind of pointless because the type restriction
         // guarantees that T will derived from CheckedDocument so casting
         // CheckedDocument to T should always work
-        return (T) new CheckedDocument(wikiPath, DocumentFormatRegistry.getFormat(f.getName()));
+        return (TDoc) new BasicCheckedDocument(wikiPath, DocumentFormatRegistry.getFormat(f.getName()));
     }
 
 }
