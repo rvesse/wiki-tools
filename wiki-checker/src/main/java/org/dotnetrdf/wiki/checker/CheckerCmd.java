@@ -91,7 +91,7 @@ public class CheckerCmd {
                 scanner.scan(wiki, args[0]);
 
                 // Carry out checks
-                DocumentChecker<BasicCheckedLink, BasicCheckedDocument> checker = new BasicDocumentChecker<BasicCheckedLink, BasicCheckedDocument>(wiki, args[0]);
+                WikiChecker<BasicCheckedLink, BasicCheckedDocument> checker = new BasicWikiChecker(wiki, args[0]);
                 checker.run();
 
                 // Dump Report

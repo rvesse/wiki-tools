@@ -27,8 +27,7 @@ import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 
 /**
- * The document checker is responsible for carrying out actual checks on
- * documents
+ * A basic wiki checker implementation
  * 
  * @author rvesse
  * @param <TLink>
@@ -37,8 +36,8 @@ import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
  *            Checked document type
  * 
  */
-public class BasicDocumentChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends
-        AbstractDocumentChecker<TLink, TDoc> {
+public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends
+        AbstractWikiChecker<TLink, TDoc> {
 
     /**
      * Creates a new document checker
@@ -49,7 +48,7 @@ public class BasicDocumentChecker<TLink extends CheckedLink, TDoc extends Checke
      * @param dir
      *            Base Directory
      */
-    public BasicDocumentChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
+    public BasicWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
         super(wiki, dir);
     }
 }

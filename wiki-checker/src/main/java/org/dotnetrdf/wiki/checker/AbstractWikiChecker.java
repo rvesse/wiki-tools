@@ -39,10 +39,10 @@ import org.slf4j.LoggerFactory;
  * @param <TDoc>
  *            Checked document type
  */
-public class AbstractDocumentChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> implements
-        DocumentChecker<TLink, TDoc> {
+public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> implements
+        WikiChecker<TLink, TDoc> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractDocumentChecker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiChecker.class);
     private CheckedWiki<TLink, TDoc> wiki;
     private String baseDir;
     private Map<String, Boolean> externalUris = new HashMap<String, Boolean>();
@@ -58,7 +58,7 @@ public class AbstractDocumentChecker<TLink extends CheckedLink, TDoc extends Che
      * @param dir
      *            Base Directory
      */
-    public AbstractDocumentChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
+    public AbstractWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
         this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))
@@ -74,9 +74,14 @@ public class AbstractDocumentChecker<TLink extends CheckedLink, TDoc extends Che
     public final String getBaseDirectory() {
         return this.baseDir;
     }
-
+    
     @Override
     public final void run() throws IOException {
+        this.run(false);
+    }
+
+    @Override
+    public final void run(boolean recheck) throws IOException {
         LOGGER.info("Checking for per-document issues");
 
         // Start checking documents
@@ -84,7 +89,7 @@ public class AbstractDocumentChecker<TLink extends CheckedLink, TDoc extends Che
         while (documents.hasNext()) {
             TDoc document = documents.next();
 
-            if (document.hasBeenChecked())
+            if (document.hasBeenChecked() && !recheck)
                 continue;
 
             LOGGER.debug("Checking document " + document.getPath() + document.getFilename());

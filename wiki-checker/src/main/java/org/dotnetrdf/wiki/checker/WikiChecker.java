@@ -11,7 +11,7 @@ import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 
 /**
- * Interface for document checkers
+ * Interface for wiki checkers
  * 
  * @author rvesse
  * 
@@ -20,7 +20,7 @@ import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
  * @param <TDoc>
  *            Checked document type
  */
-public interface DocumentChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
+public interface WikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> {
 
     /**
      * Gets the wiki
@@ -29,20 +29,31 @@ public interface DocumentChecker<TLink extends CheckedLink, TDoc extends Checked
      */
     public abstract CheckedWiki<TLink, TDoc> getWiki();
 
-    // TODO Base Directory can likely be safely removed if we add a getInputStream() method to Document
-    
+    // TODO Base Directory can likely be safely removed if we add a
+    // getInputStream() method to Document
+
     /**
      * Gets the base directory on disk where the wiki is located
      * 
      * @return Base Directory
      */
     public abstract String getBaseDirectory();
-
+    
     /**
-     * Run the document checker
-     * 
+     * Runs the wiki checker
      * @throws IOException
      */
     public abstract void run() throws IOException;
+
+    /**
+     * Run the wiki checker
+     * 
+     * @param recheck
+     *            Whether previously checked documents should be rechecked, true
+     *            forces rechecks, false (default) causes them to be skipped
+     * 
+     * @throws IOException
+     */
+    public abstract void run(boolean recheck) throws IOException;
 
 }
