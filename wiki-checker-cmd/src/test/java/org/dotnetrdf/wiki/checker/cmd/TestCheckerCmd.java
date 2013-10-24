@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */
 
-package org.dotnetrdf.wiki.checker;
+package org.dotnetrdf.wiki.checker.cmd;
 
 import org.dotnetrdf.wiki.checker.cmd.CheckerCmd;
 

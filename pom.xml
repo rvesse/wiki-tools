@@ -9,11 +9,12 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>wiki-checker</module>
+		<module>wiki-checker-api</module>
 		<module>wiki-data-model</module>
 		<module>wiki-data-parser</module>
+		<module>wiki-checker-cmd</module>
 	</modules>
-
+	
 	<build>
 		<plugins>
 			<!-- Compiler Plugin -->

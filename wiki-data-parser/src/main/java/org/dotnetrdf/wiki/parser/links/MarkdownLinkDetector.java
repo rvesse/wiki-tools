@@ -137,7 +137,6 @@ public class MarkdownLinkDetector extends BaseLinkDetector {
                 uri = uri.substring(1, uri.length() - 1);
 
             references.put(refId, uri);
-            System.out.println("Reference " + refId + " -> " + uri);
         }
 
         // Then find reference links
