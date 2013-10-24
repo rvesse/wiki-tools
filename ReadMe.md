@@ -18,9 +18,13 @@ A simple API for representing wikis
 
 An API providing support for populating a wiki data model from disk plus parsing and feature extraction support.
 
-## wiki-checker
+## wiki-checker-api
 
-A command line utility for checking a wiki for common issues such as broken links.
+An API providing support for checking a wiki for common issues such as broken links.
+
+## wiki-checker-cmd
+
+A command line utility for checking a wiki for common issues such as broken links.  This is a simple command line wrapper around the wiki-checker-api module
 
 ### TODO
 
