@@ -28,12 +28,14 @@ The following additional features are planned for the tools:
 
 - Add wiki-render module(s) which can be used to render a wiki into HTML for static deployments
  - Include the ability to render versioned content
+ - Include the ability to create site maps and TOC pages
  - Use creole-parser for Creole (https://github.com/mrico/creole-parser)
  - Use Markdown4j for Markdown (https://code.google.com/p/markdown4j/)
  - Use textile4j for Textile (http://sourceforge.net/projects/textile4j/)
  - Use JRst for RestructedText (http://maven-site.nuiton.org/jrst/en/index.html)
 - Support for detecting links in ReStructedText and Textile formats
 - Add wiki-indexer module(s) which can be used to index a wiki for full text search with Lucene
+
 
 # License
 
