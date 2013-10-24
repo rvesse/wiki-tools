@@ -1,6 +1,12 @@
 # Wiki Tools
 
-A set of APIs and utilities for working with BitBucket wikis.
+A set of APIs and utilities for working with BitBucket wikis.  These aim to address a number of deficiencies present in the BitBucket wiki system, namely:
+
+- [#2659 Show all of the page on a wiki](https://bitbucket.org/site/master/issue/2659/show-all-of-the-pages-in-the-wiki-on-a)
+- [#6195 Allow project wikis to be browsable by tag or branch](https://bitbucket.org/site/master/issue/6195/allow-project-wikis-to-be-browsable-by-tag)
+- [#122 Wiki Search](https://bitbucket.org/site/master/issue/122/wiki-search-bb-501)
+
+And eventually allow wikis to be rendered to static HTML for hosting off site particularly in light of issue 6195 that prevents easy browsing of past versions of a wiki.
 
 Currently contains the following modules:
 
