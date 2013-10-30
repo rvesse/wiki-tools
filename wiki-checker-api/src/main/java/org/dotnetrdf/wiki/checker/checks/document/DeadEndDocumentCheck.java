@@ -20,36 +20,30 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-package org.dotnetrdf.wiki.checker.checks.links;
+package org.dotnetrdf.wiki.checker.checks.document;
 
-import org.dotnetrdf.wiki.checker.checks.LinkCheck;
+import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * A link check that issues warnings for links without friendly text which are
- * not trivial relative links
+ * Document check that issues warnings for documents in wiki/text format which
+ * are dead ends i.e. those that have no outgoing links
  * 
  * @author rvesse
  * 
  */
-public class MissingFriendlyTextCheck implements LinkCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MissingFriendlyTextCheck.class);
+public class DeadEndDocumentCheck implements DocumentCheck {
 
     @Override
-    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
+    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, String text,
             CheckedWiki<TLink, TDoc> wiki) {
-        // Issue warnings for links without friendly text
-        // Don't issue a warning if this is a trivial relative link i.e. a link
-        // to another page in the same directory
-        if (!link.hasFriendlyText() && !link.isMailLink() && (!link.isWikiLink() || link.getPath().contains("/"))) {
-            document.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
-            LOGGER.warn("Link does not have friendly text - " + link.toString());
+        if (document.getFormat().isWiki() || document.getFormat().isText()) {
+            if (document.getOutboundLinkCount() == 0) {
+                document.addIssue(new Issue("Document is a dead end with zero outbound links"));
+            }
         }
     }
-
 }
