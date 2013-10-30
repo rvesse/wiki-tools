@@ -18,9 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
-
-
+ */
 
 package org.dotnetrdf.wiki.checker.checks.document;
 
@@ -31,21 +29,61 @@ import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
 
 /**
- * Checks for short documents
+ * Document check which issues warnings for documents that are below a certain
+ * length. Length is considered in textual terms for text documents and in file
+ * size for other documents.
+ * 
  * @author rvesse
- *
+ * 
  */
 public class ShortDocumentCheck implements DocumentCheck {
+
+    /**
+     * Default threshold below which documents are considered short
+     */
+    public static final long DEFAULT_SHORT_DOCUMENT_THRESHOLD = 256;
+
+    private long threshold;
+
+    /**
+     * Creates a new check using the default threshold provided by
+     * {@link #DEFAULT_SHORT_DOCUMENT_THRESHOLD}
+     */
+    public ShortDocumentCheck() {
+        this(DEFAULT_SHORT_DOCUMENT_THRESHOLD);
+    }
+
+    /**
+     * Creates a new check using the provided threshold
+     * 
+     * @param threshold
+     *            Threshold, must be >= 1
+     */
+    public ShortDocumentCheck(long threshold) {
+        if (threshold < 1)
+            throw new IllegalArgumentException("Threshold must be >= 1");
+        this.threshold = threshold;
+    }
 
     @Override
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, String text,
             CheckedWiki<TLink, TDoc> wiki) {
+        // Check for short documents by textual length
         if (document.getFormat().isText() && text != null) {
-            if (text.length() < 256) {
+            if (text.length() < this.threshold) {
                 document.addIssue(new Issue("Page has only " + text.length()
                         + " characters, this document may be an incomplete/stub document"));
+                return;
+            }
+        }
+
+        // Check for short documents by file size
+        if (document.getFile() != null && document.getFile().exists()) {
+            if (document.getFile().length() < this.threshold) {
+                document.addIssue(new Issue(String.format(
+                        "Document is only %,d bytes in length, this document may be an incomplete/stub document", document
+                                .getFile().length())));
             }
         }
     }
-
 }

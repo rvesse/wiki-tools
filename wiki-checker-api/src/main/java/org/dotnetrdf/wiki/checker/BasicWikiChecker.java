@@ -21,6 +21,8 @@
 
 package org.dotnetrdf.wiki.checker;
 
+import org.dotnetrdf.wiki.checker.checks.document.IsolatedDocumentCheck;
+import org.dotnetrdf.wiki.checker.checks.document.PoorlyLinkedDocumentCheck;
 import org.dotnetrdf.wiki.checker.checks.document.ShortDocumentCheck;
 import org.dotnetrdf.wiki.checker.checks.links.EmailLinkCheck;
 import org.dotnetrdf.wiki.checker.checks.links.ExternalLinkCheck;
@@ -65,5 +67,7 @@ public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDoc
         
         // Standard document checks
         this.addDocumentCheck(new ShortDocumentCheck());
+        this.addDocumentCheck(new IsolatedDocumentCheck());
+        this.addDocumentCheck(new PoorlyLinkedDocumentCheck());
     }
 }
