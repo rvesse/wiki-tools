@@ -65,13 +65,17 @@ public abstract class AbstractWikiScanner<TLink extends Link, TDoc extends Docum
      */
     private void scan(Wiki<TLink, TDoc> wiki, String basePath, File dir, boolean top) {
         // Ignore hidden directories
-        if (dir.getPath().contains("."))
+        if (dir.getPath().contains(File.separator + "."))
             return;
 
         LOGGER.info("Scanning Directory " + dir.getAbsolutePath() + " (Base Path " + basePath + ")");
 
         // Scan for files and folders in this directory
         for (File f : dir.listFiles()) {
+            // Ignore hidden files
+            if (f.getName().startsWith("."))
+                continue;
+
             if (f.isDirectory()) {
                 // Scan sub-directory
                 this.scan(wiki, basePath + (top ? "" : dir.getName() + "/"), f, false);
