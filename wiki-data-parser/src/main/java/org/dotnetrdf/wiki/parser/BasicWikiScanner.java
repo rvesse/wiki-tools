@@ -43,7 +43,7 @@ public class BasicWikiScanner<T extends BasicDocument> extends AbstractWikiScann
     protected T createDocument(String wikiPath, File f) {
         // Unchecked warning is kind of dumb here since T is restricted to being
         // derived from BasicDocument so BasicDocument must be castable to T
-        return (T) new BasicDocument(wikiPath, DocumentFormatRegistry.getFormat(f.getName()));
+        return (T) new BasicDocument(wikiPath, f, DocumentFormatRegistry.getFormat(f.getName()));
     }
 
 }

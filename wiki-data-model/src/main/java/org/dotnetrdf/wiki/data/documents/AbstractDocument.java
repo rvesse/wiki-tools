@@ -21,6 +21,10 @@
 package org.dotnetrdf.wiki.data.documents;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -39,8 +43,8 @@ import org.dotnetrdf.wiki.data.links.Link;
  */
 public abstract class AbstractDocument<T extends Link> implements Document<T> {
 
+    private File file;
     private String path;
-    private String filename;
     protected Set<T> links = new HashSet<T>();
     protected Set<T> inboundLinks = new HashSet<T>();
     protected Format format;
@@ -48,15 +52,18 @@ public abstract class AbstractDocument<T extends Link> implements Document<T> {
     /**
      * Creates a document
      * 
-     * @param path
-     *            Path to the document
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param f
+     *            Disk file for the document
      * @param format
      *            Format of the document
      */
-    public AbstractDocument(String path, Format format) {
-        this.path = path;
-        this.filename = path.replace('/', File.separatorChar);
-        this.format = format;
+    public AbstractDocument(String wikiPath, File f, Format format) {
+        if (wikiPath == null) throw new NullPointerException("Wiki path cannot be null");
+        this.path = wikiPath;
+        this.file = f;
+        this.format = format == null ? Format.UNKNOWN : format;
 
         // Strip extension if present from path for wiki formats only
         if (this.format.isWiki() && this.path.contains(".")) {
@@ -64,106 +71,73 @@ public abstract class AbstractDocument<T extends Link> implements Document<T> {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getPath()
-     */
     @Override
     public String getPath() {
         return this.path;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getFilename()
-     */
     @Override
-    public String getFilename() {
-        return this.filename;
+    public File getFile() {
+        return this.file;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getFormat()
-     */
     @Override
     public Format getFormat() {
         return this.format;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#isTopLevel()
-     */
     @Override
     public boolean isTopLevel() {
         return !this.path.contains("/");
     }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.dotnetrdf.wiki.data.documents.Document#addOutboundLink(org.dotnetrdf
-     * .wiki.data.links.Link)
-     */
+    @Override
+    public String getText() throws IOException {
+        if (!this.format.isText()) return null;
+        if (this.file == null) return null;
+        
+        if (!this.file.exists()) throw new FileNotFoundException("The on disk file for the document " + this.getPath() + " cannot be found");
+        
+        FileReader reader = new FileReader(this.file);
+
+        StringWriter sw = new StringWriter(8192);
+        char buff[] = new char[8192];
+        for (;;) {
+            int l = reader.read(buff);
+            if (l < 0)
+                break;
+            sw.write(buff, 0, l);
+        }
+        reader.close();
+        sw.close();
+        return sw.toString();
+    }
+
     @Override
     public void addOutboundLink(T link) {
         this.links.add(link);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundLinks()
-     */
     @Override
     public Iterator<T> getOutboundLinks() {
         return this.links.iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.dotnetrdf.wiki.data.documents.Document#addInboundLink(org.dotnetrdf
-     * .wiki.data.links.Link)
-     */
     @Override
     public void addInboundLink(T link) {
         this.inboundLinks.add(link);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getInboundLinks()
-     */
     @Override
     public Iterator<T> getInboundLinks() {
         return this.inboundLinks.iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getOutboundLinkCount()
-     */
     @Override
     public int getOutboundLinkCount() {
         return this.links.size();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.dotnetrdf.wiki.data.documents.Document#getOutboundWikiLinkCount()
-     */
     @Override
     public int getOutboundWikiLinkCount() {
         int count = 0;
@@ -174,12 +148,6 @@ public abstract class AbstractDocument<T extends Link> implements Document<T> {
         return count;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.dotnetrdf.wiki.data.documents.Document#getOutboundExternalLinkCount()
-     */
     @Override
     public int getOutboundExternalLinkCount() {
         int count = 0;
@@ -190,11 +158,6 @@ public abstract class AbstractDocument<T extends Link> implements Document<T> {
         return count;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.dotnetrdf.wiki.data.documents.Document#getInboundLinkCount()
-     */
     @Override
     public int getInboundLinkCount() {
         return this.inboundLinks.size();

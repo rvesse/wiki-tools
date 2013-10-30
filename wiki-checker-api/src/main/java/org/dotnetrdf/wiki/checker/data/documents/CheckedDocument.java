@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.data.documents;
 
@@ -102,5 +102,4 @@ public interface CheckedDocument<TLink extends CheckedLink> extends Document<TLi
      *            Check status of the document
      */
     public abstract void setChecked(boolean checked);
-
 }

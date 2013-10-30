@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.dotnetrdf.wiki.checker.data.documents;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -49,13 +50,15 @@ public abstract class AbstractCheckedDocument<TLink extends CheckedLink> extends
     /**
      * Creates a document
      * 
-     * @param path
-     *            Path to the document
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param f
+     *            Disk file of the document
      * @param format
      *            Format of the document
      */
-    public AbstractCheckedDocument(String path, Format format) {
-        super(path, format);
+    public AbstractCheckedDocument(String wikiPath, File f, Format format) {
+        super(wikiPath, f, format);
     }
 
     @Override

@@ -47,9 +47,9 @@ public class CheckedWikiScanner<TLink extends CheckedLink, TDoc extends CheckedD
     @Override
     protected TDoc createDocument(String wikiPath, File f) {
         // Unchecked warning is kind of pointless because the type restriction
-        // guarantees that T will implement CheckedDocument so casting
-        // CheckedDocument to T should always work
-        return (TDoc) new BasicCheckedDocument(wikiPath, DocumentFormatRegistry.getFormat(f.getName()));
+        // guarantees that TDoc will implement CheckedDocument so casting
+        // CheckedDocument to TDoc should always work
+        return (TDoc) new BasicCheckedDocument(wikiPath, f, DocumentFormatRegistry.getFormat(f.getName()));
     }
 
 }

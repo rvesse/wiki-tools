@@ -21,13 +21,19 @@
 
 package org.dotnetrdf.wiki.checker;
 
+import org.dotnetrdf.wiki.checker.checks.document.ShortDocumentCheck;
+import org.dotnetrdf.wiki.checker.checks.links.EmailLinkCheck;
+import org.dotnetrdf.wiki.checker.checks.links.ExternalLinkCheck;
+import org.dotnetrdf.wiki.checker.checks.links.MissingFriendlyTextCheck;
+import org.dotnetrdf.wiki.checker.checks.links.WikiLinkCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 
 /**
- * A basic wiki checker implementation
+ * A basic wiki checker implementation which has the standard set of link and
+ * document checks already registered
  * 
  * @author rvesse
  * @param <TLink>
@@ -50,5 +56,14 @@ public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDoc
      */
     public BasicWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
         super(wiki, dir);
+        
+        // Standard link checks
+        this.addLinkCheck(new MissingFriendlyTextCheck());
+        this.addLinkCheck(new WikiLinkCheck());
+        this.addLinkCheck(new EmailLinkCheck());
+        this.addLinkCheck(new ExternalLinkCheck());
+        
+        // Standard document checks
+        this.addDocumentCheck(new ShortDocumentCheck());
     }
 }

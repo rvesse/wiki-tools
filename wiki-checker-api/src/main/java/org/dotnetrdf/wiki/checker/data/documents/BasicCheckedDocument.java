@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.dotnetrdf.wiki.checker.data.documents;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -45,13 +46,15 @@ public class BasicCheckedDocument extends AbstractCheckedDocument<BasicCheckedLi
     /**
      * Creates a document
      * 
-     * @param path
-     *            Path to the document
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param f
+     *            Disk file for the document
      * @param format
      *            Format of the document
      */
-    public BasicCheckedDocument(String path, Format format) {
-        super(path, format);
+    public BasicCheckedDocument(String wikiPath, File f, Format format) {
+        super(wikiPath, f, format);
     }
 
     @Override

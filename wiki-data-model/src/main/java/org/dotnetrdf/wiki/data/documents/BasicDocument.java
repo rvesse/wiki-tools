@@ -18,9 +18,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.data.documents;
+
+import java.io.File;
 
 import org.dotnetrdf.wiki.data.documents.formats.Format;
 import org.dotnetrdf.wiki.data.links.BasicLink;
@@ -37,13 +39,27 @@ public class BasicDocument extends AbstractDocument<BasicLink> {
     /**
      * Creates a document
      * 
-     * @param path
-     *            Path to the document
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param f
+     *            Disk file for the document
      * @param format
      *            Format of the document
      */
-    public BasicDocument(String path, Format format) {
-        super(path, format);
+    public BasicDocument(String wikiPath, File f, Format format) {
+        super(wikiPath, f, format);
+    }
+
+    /**
+     * Creates a document whose on-disk location is not known
+     * 
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param format
+     *            Format of the document
+     */
+    public BasicDocument(String wikiPath, Format format) {
+        this(wikiPath, null, format);
     }
 
     @Override
