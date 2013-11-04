@@ -22,6 +22,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.dotnetrdf.wiki.render.renderer;
 
+import org.dotnetrdf.wiki.data.documents.formats.Format;
 import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.render.data.RenderedWiki;
 import org.dotnetrdf.wiki.render.data.documents.RenderedDocument;
@@ -42,6 +43,16 @@ public interface WikiRenderer<TLink extends Link, TDoc extends RenderedDocument<
      * @return Wiki
      */
     public RenderedWiki<TLink, RenderedDocument<TLink>> getWiki();
+
+    /**
+     * Sets the document renderer to use for the specified format
+     * 
+     * @param format
+     *            Format
+     * @param renderer
+     *            Document renderer
+     */
+    public void setDocumentRenderer(Format format, DocumentRenderer renderer);
 
     /**
      * Runs the renderer

@@ -23,6 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.dotnetrdf.wiki.render.renderer;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.dotnetrdf.wiki.data.links.Link;
 import org.dotnetrdf.wiki.render.data.RenderedWiki;
