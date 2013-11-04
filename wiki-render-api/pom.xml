@@ -1,21 +1,27 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.dotnetrdf</groupId>
-    <artifactId>wiki-tools</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
-    <relativePath>../</relativePath>
-  </parent>
-  
-  <artifactId>wiki-render-api</artifactId>
-  <name>Wiki Render API</name>
-  <description>An API for rendering wikis into static HTML</description>
-  
-  <dependencies>
-  	<dependency>
-  		<groupId>org.dotnetrdf</groupId>
-  		<artifactId>wiki-data-parser</artifactId>
-  		<version>${project.version}</version>
-  	</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.dotnetrdf</groupId>
+		<artifactId>wiki-tools</artifactId>
+		<version>0.1.0-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<artifactId>wiki-render-api</artifactId>
+	<name>Wiki Render API</name>
+	<description>An API for rendering wikis into static HTML</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.dotnetrdf</groupId>
+			<artifactId>wiki-data-parser</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mrico</groupId>
+			<artifactId>creole-parser</artifactId>
+			<version>0.9.0-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

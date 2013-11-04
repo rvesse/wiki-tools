@@ -26,6 +26,10 @@ An API providing support for checking a wiki for common issues such as broken li
 
 A command line utility for checking a wiki for common issues such as broken links.  This is a simple command line wrapper around the wiki-checker-api module
 
+## wiki-render-api
+
+An API providing support for rendering a wiki into static HTML.
+
 ### TODO
 
 The following additional features are planned for the tools:
