@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.checks.wiki;
 
@@ -26,18 +26,20 @@ import org.dotnetrdf.wiki.checker.checks.WikiCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
+import org.dotnetrdf.wiki.checker.issues.Issue;
 
 /**
  * A wiki check that issues errors for empty wikis
+ * 
  * @author rvesse
- *
+ * 
  */
 public class EmptyWikiCheck implements WikiCheck {
 
     @Override
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(CheckedWiki<TLink, TDoc> wiki) {
-        // TODO Auto-generated method stub
-
+        if (wiki.getDocumentCount() == 0)
+            wiki.addGlobalIssue(new Issue("Wiki has no documents", true));
     }
 
 }

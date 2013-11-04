@@ -29,7 +29,7 @@ import java.util.Set;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.dotnetrdf.wiki.data.BasicWiki;
+import org.dotnetrdf.wiki.data.AbstractWiki;
 
 /**
  * Abstract implementation of a checked wiki which is a wiki composed of
@@ -42,7 +42,7 @@ import org.dotnetrdf.wiki.data.BasicWiki;
  *            Checked document type
  */
 public abstract class AbstractCheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends
-        BasicWiki<TLink, TDoc> implements CheckedWiki<TLink, TDoc> {
+        AbstractWiki<TLink, TDoc> implements CheckedWiki<TLink, TDoc> {
 
     private boolean checked = false;
     protected Set<Issue> globalIssues = new HashSet<Issue>();

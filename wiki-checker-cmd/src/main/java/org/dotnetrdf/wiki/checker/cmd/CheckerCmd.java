@@ -67,7 +67,7 @@ import org.slf4j.LoggerFactory;
 @Command(name = "check", description = "Checks a wiki for common issues and errors")
 public class CheckerCmd {
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CheckerCmd.class);
-    
+
     private static final String ANSI_RED = "\u001B[31m";
     private static final String ANSI_RESET = "\u001B[0m";
 
@@ -107,7 +107,7 @@ public class CheckerCmd {
      * @param args
      *            Arguments
      */
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
         try {
             CheckerCmd cmd = SingleCommand.singleCommand(CheckerCmd.class).parse(args);
 
@@ -212,12 +212,26 @@ public class CheckerCmd {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
 
-        Iterator<BasicCheckedDocument> iter = wiki.getDocuments();
+        // Report Summary
         pw.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
         pw.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and "
                 + wiki.getTotalExternalLinks() + " External Link(s)");
         pw.println(wiki.getTotalErrorCount() + " Error(s) and " + wiki.getTotalWarningCount() + " Warning(s)");
         pw.println();
+
+        // Report on global issues
+        pw.println(wiki.getGlobalErrorCount() + " Global Error(s) and " + wiki.getGlobalWarningCount() + " Global Warning(s)");
+        Iterator<Issue> globalIssues = wiki.getGlobalIssues();
+        while (globalIssues.hasNext()) {
+            Issue i = globalIssues.next();
+            if (i.isError() || this.verbose || this.showWarnings) {
+                pw.println(i.toString());
+            }
+        }
+
+        // Report on documents
+        pw.println();
+        Iterator<BasicCheckedDocument> iter = wiki.getDocuments();
         while (iter.hasNext()) {
             CheckedDocument<BasicCheckedLink> document = iter.next();
             if ((document.hasIssues() && (this.showWarnings || document.hasErrors())) || this.verbose) {

@@ -29,6 +29,8 @@ import org.dotnetrdf.wiki.checker.checks.links.EmailLinkCheck;
 import org.dotnetrdf.wiki.checker.checks.links.ExternalLinkCheck;
 import org.dotnetrdf.wiki.checker.checks.links.MissingFriendlyTextCheck;
 import org.dotnetrdf.wiki.checker.checks.links.WikiLinkCheck;
+import org.dotnetrdf.wiki.checker.checks.wiki.EmptyWikiCheck;
+import org.dotnetrdf.wiki.checker.checks.wiki.NoWikiDocumentsCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -71,5 +73,9 @@ public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDoc
         this.addDocumentCheck(new IsolatedDocumentCheck());
         this.addDocumentCheck(new PoorlyLinkedDocumentCheck());
         this.addDocumentCheck(new DeadEndDocumentCheck());
+        
+        // Standard wiki checks
+        this.addWikiCheck(new EmptyWikiCheck());
+        this.addWikiCheck(new NoWikiDocumentsCheck());
     }
 }
