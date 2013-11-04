@@ -49,7 +49,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.dotnetrdf.wiki.checker.BasicWikiChecker;
 import org.dotnetrdf.wiki.checker.WikiChecker;
-import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
+import org.dotnetrdf.wiki.checker.data.BasicCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
@@ -171,7 +172,7 @@ public class CheckerCmd {
             Logger.getLogger("org.apache.http").setLevel(Level.WARN);
 
             // Scan specified directory
-            CheckedWiki<BasicCheckedLink, BasicCheckedDocument> wiki = new CheckedWiki<BasicCheckedLink, BasicCheckedDocument>();
+            BasicCheckedWiki wiki = new BasicCheckedWiki();
             CheckedWikiScanner<BasicCheckedLink, BasicCheckedDocument> scanner = new CheckedWikiScanner<BasicCheckedLink, BasicCheckedDocument>();
             System.out.println(String.format("Checking wiki located at %s", this.input));
             scanner.scan(wiki, this.input);
@@ -207,7 +208,7 @@ public class CheckerCmd {
      *            issues will be reported on
      * @return
      */
-    private String getReport(CheckedWiki<BasicCheckedLink, BasicCheckedDocument> wiki) {
+    private String getReport(AbstractCheckedWiki<BasicCheckedLink, BasicCheckedDocument> wiki) {
         StringWriter writer = new StringWriter();
         PrintWriter pw = new PrintWriter(writer);
 
@@ -215,7 +216,7 @@ public class CheckerCmd {
         pw.println("Checked " + wiki.getTotalDocuments() + " Document(s) for issues");
         pw.println(wiki.getTotalLinks() + " Link(s) discovered - " + wiki.getTotalWikiLinks() + " Wiki Link(s) and "
                 + wiki.getTotalExternalLinks() + " External Link(s)");
-        pw.println(wiki.getTotalErrors() + " Error(s) and " + wiki.getTotalWarnings() + " Warning(s)");
+        pw.println(wiki.getTotalErrorCount() + " Error(s) and " + wiki.getTotalWarningCount() + " Warning(s)");
         pw.println();
         while (iter.hasNext()) {
             CheckedDocument<BasicCheckedLink> document = iter.next();

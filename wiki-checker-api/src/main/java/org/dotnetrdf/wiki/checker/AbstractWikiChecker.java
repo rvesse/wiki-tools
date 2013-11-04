@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.checks.LinkCheck;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -60,7 +61,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
         WikiChecker<TLink, TDoc> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiChecker.class);
-    private CheckedWiki<TLink, TDoc> wiki;
+    private AbstractCheckedWiki<TLink, TDoc> wiki;
     private String baseDir;
     private List<DocumentCheck> documentChecks = new ArrayList<DocumentCheck>();
     private List<LinkCheck> linkChecks = new ArrayList<LinkCheck>();
@@ -74,7 +75,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
      * @param dir
      *            Base Directory
      */
-    public AbstractWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
+    public AbstractWikiChecker(AbstractCheckedWiki<TLink, TDoc> wiki, String dir) {
         this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))

@@ -18,49 +18,108 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- */
+*/
 
 package org.dotnetrdf.wiki.checker.data;
 
+import java.util.Iterator;
+
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.BasicWiki;
+import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.data.Wiki;
 
 /**
- * Represents a wiki composed of documents which may be checked and have issues
- * logged against them
+ * Interface for
  * 
  * @author rvesse
+ * 
  * @param <TLink>
  *            Checked link type
  * @param <TDoc>
  *            Checked document type
  */
-public class CheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends BasicWiki<TLink, TDoc> {
+public interface CheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> extends Wiki<TLink, TDoc> {
 
     /**
-     * Gets the total number of errors
+     * Gets the total number of errors including those in checked documents and
+     * global wiki level errors
      * 
      * @return Total errors
      */
-    public int getTotalErrors() {
-        int count = 0;
-        for (TDoc document : this.documents.values()) {
-            count += document.getErrorCount();
-        }
-        return count;
-    }
+    public abstract int getTotalErrorCount();
 
     /**
-     * Gets the total number of warnings
+     * Gets the total number of warnings including those in checked documents
+     * and global wiki level warnings
      * 
      * @return Total warnings
      */
-    public int getTotalWarnings() {
-        int count = 0;
-        for (TDoc document : this.documents.values()) {
-            count += document.getWarningCount();
-        }
-        return count;
-    }
+    public abstract int getTotalWarningCount();
+
+    /**
+     * Gets whether the wiki has been checked
+     * 
+     * @return True if it has been checked
+     */
+    public abstract boolean hasBeenChecked();
+
+    /**
+     * Adds a global issue to the wiki
+     * 
+     * @param issue
+     *            Issue
+     */
+    public abstract void addGlobalIssue(Issue issue);
+
+    /**
+     * Gets whether the wiki has any global issues (errors/warnings)
+     * 
+     * @return True if there are any global issues, false otherwise
+     */
+    public abstract boolean hasGlobalIssues();
+
+    /**
+     * Gets whether the wiki has any global errors
+     * 
+     * @return True if there are errors, false otherwise
+     */
+    public abstract boolean hasGlobalErrors();
+
+    /**
+     * Gets the global issues for the wiki
+     * 
+     * @return Global issues
+     */
+    public abstract Iterator<Issue> getGlobalIssues();
+
+    /**
+     * Gets the number of global issues identified
+     * 
+     * @return Number of global issues
+     */
+    public abstract int getGlobalIssueCount();
+
+    /**
+     * Gets the number of global errors identified
+     * 
+     * @return Number of global errors
+     */
+    public abstract int getGlobalErrorCount();
+
+    /**
+     * Gets the number of global warnings identified
+     * 
+     * @return Number of global warnings
+     */
+    public abstract int getGlobalWarningCount();
+
+    /**
+     * Sets whether the wiki has been checked
+     * 
+     * @param checked
+     *            Check status of the wiki
+     */
+    public abstract void setChecked(boolean checked);
+
 }
