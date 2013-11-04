@@ -20,47 +20,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-package org.dotnetrdf.wiki.checker.checks.links;
+package org.dotnetrdf.wiki.checker.checks.wiki;
 
-import org.dotnetrdf.wiki.checker.checks.LinkCheck;
-import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
+import java.util.Iterator;
+
+import org.dotnetrdf.wiki.checker.checks.WikiCheck;
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * A link check which validates wiki links and registers inbound links on the
- * targeted documents
+ * Check that issues an error for wikis which contain zero wiki format documents
  * 
  * @author rvesse
  * 
  */
-public class WikiLinkCheck implements LinkCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WikiLinkCheck.class);
+public class NoWikiDocumentsCheck implements WikiCheck {
 
     @Override
-    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
-            AbstractCheckedWiki<TLink, TDoc> wiki) {
-        if (!link.isWikiLink())
-            return;
-        
-        // Wiki Link Validation
-        String linkPath = link.getPath();
-        TDoc target = wiki.getDocument(linkPath);
-        if (target == null) {
-            // Mark as Broken
-            document.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
-            LOGGER.error("Broken wiki link " + link.toString());
-        } else {
-            // Mark as Inbound Link on target Page
-            // Don't count self referential links in inbound links
-            if (!document.getPath().equals(link.getPath())) {
-                target.addInboundLink(link);
-            }
+    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(CheckedWiki<TLink, TDoc> wiki) {
+        Iterator<TDoc> documents = wiki.getDocuments();
+        while (documents.hasNext()) {
+            TDoc doc = documents.next();
+            if (doc.getFormat().isWiki())
+                return;
         }
 
+        // No wiki documents found
+        wiki.addGlobalIssue(new Issue("Wiki contains no wiki format documents", true));
     }
 
 }

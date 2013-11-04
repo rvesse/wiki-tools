@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.List;
 import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.checks.LinkCheck;
+import org.dotnetrdf.wiki.checker.checks.WikiCheck;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -56,14 +58,15 @@ import org.slf4j.LoggerFactory;
  * @param <TDoc>
  *            Checked document type
  */
-public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> implements
+public abstract class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> implements
         WikiChecker<TLink, TDoc> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWikiChecker.class);
-    private CheckedWiki<TLink, TDoc> wiki;
+    private AbstractCheckedWiki<TLink, TDoc> wiki;
     private String baseDir;
     private List<DocumentCheck> documentChecks = new ArrayList<DocumentCheck>();
     private List<LinkCheck> linkChecks = new ArrayList<LinkCheck>();
+    private List<WikiCheck> wikiChecks = new ArrayList<WikiCheck>();
 
     /**
      * Creates a new document checker
@@ -74,7 +77,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
      * @param dir
      *            Base Directory
      */
-    public AbstractWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
+    public AbstractWikiChecker(AbstractCheckedWiki<TLink, TDoc> wiki, String dir) {
         this.wiki = wiki;
         this.baseDir = dir;
         if (!this.baseDir.endsWith(File.separator))
@@ -87,19 +90,20 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
     }
 
     @Override
-    public final String getBaseDirectory() {
-        return this.baseDir;
-    }
-
-    @Override
     public final void run() throws IOException {
         this.run(false);
     }
 
     @Override
     public final void run(boolean recheck) throws IOException {
+        if (this.wiki.hasBeenChecked() && !recheck) {
+            return;
+        } else if (this.wiki.hasBeenChecked() && recheck) {
+            // TODO Reset global issues
+        }
+
         Iterator<TDoc> documents = this.wiki.getDocuments();
-        
+
         // For each document detect and check links
         LOGGER.info("Checking links in documents");
         while (documents.hasNext()) {
@@ -116,7 +120,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
 
             // Firstly we need to read in the document text
             String text = document.getText();
-            
+
             // Detect Links
             LinkDetector detector = LinkDetectorRegistry.getLinkDetector(document.getFormat());
             if (detector == null) {
@@ -129,8 +133,8 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
             }
 
             // Check Links
-            
-            // TODO Move into multiple LinkCheck implementations
+
+            // Apply link checks
             Iterator<TLink> links = document.getOutboundLinks();
             while (links.hasNext()) {
                 TLink link = links.next();
@@ -142,9 +146,6 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
                 }
             }
 
-            // Finally mark as checked
-            document.setChecked(true);
-
             LOGGER.debug("Finished checking links in document " + document.getPath());
         }
         LOGGER.info("Finished checking links in documents");
@@ -154,15 +155,32 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
         LOGGER.info("Checking documents");
         while (documents.hasNext()) {
             TDoc document = documents.next();
-            
+
+            LOGGER.debug("Checking document " + document.getPath());
+
             Iterator<DocumentCheck> docChecks = this.getDocumentChecks();
             while (docChecks.hasNext()) {
                 DocumentCheck check = docChecks.next();
-                
+
                 check.check(document, document.getText(), this.wiki);
             }
+
+            // Finally mark as checked
+            document.setChecked(true);
         }
         LOGGER.info("Finished checking documents");
+
+        // Finally carry out wiki checks
+        LOGGER.info("Performing global wiki checks");
+        Iterator<WikiCheck> checks = this.getWikiChecks();
+        while (checks.hasNext()) {
+            WikiCheck check = checks.next();
+
+            check.check(this.wiki);
+        }
+        LOGGER.info("Finished global wiki checks");
+        this.wiki.setChecked(true);
+
     }
 
     @Override
@@ -185,6 +203,17 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
     @Override
     public Iterator<LinkCheck> getLinkChecks() {
         return this.linkChecks.iterator();
+    }
+
+    @Override
+    public void addWikiCheck(WikiCheck check) {
+        if (check != null)
+            this.wikiChecks.add(check);
+    }
+
+    @Override
+    public Iterator<WikiCheck> getWikiChecks() {
+        return this.wikiChecks.iterator();
     }
 
 }

@@ -24,7 +24,7 @@ package org.dotnetrdf.wiki.checker.parser;
 
 import java.io.File;
 
-import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -32,7 +32,7 @@ import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
 import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
 
 /**
- * Scans a directory to populate a {@link CheckedWiki}
+ * Scans a directory to populate a {@link AbstractCheckedWiki}
  * 
  * @author rvesse
  * @param <TLink>

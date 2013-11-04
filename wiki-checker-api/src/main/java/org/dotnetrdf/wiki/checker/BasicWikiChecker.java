@@ -29,7 +29,9 @@ import org.dotnetrdf.wiki.checker.checks.links.EmailLinkCheck;
 import org.dotnetrdf.wiki.checker.checks.links.ExternalLinkCheck;
 import org.dotnetrdf.wiki.checker.checks.links.MissingFriendlyTextCheck;
 import org.dotnetrdf.wiki.checker.checks.links.WikiLinkCheck;
-import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.checks.wiki.EmptyWikiCheck;
+import org.dotnetrdf.wiki.checker.checks.wiki.NoWikiDocumentsCheck;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
@@ -57,7 +59,7 @@ public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDoc
      * @param dir
      *            Base Directory
      */
-    public BasicWikiChecker(CheckedWiki<TLink, TDoc> wiki, String dir) {
+    public BasicWikiChecker(AbstractCheckedWiki<TLink, TDoc> wiki, String dir) {
         super(wiki, dir);
 
         // Standard link checks
@@ -71,5 +73,9 @@ public class BasicWikiChecker<TLink extends CheckedLink, TDoc extends CheckedDoc
         this.addDocumentCheck(new IsolatedDocumentCheck());
         this.addDocumentCheck(new PoorlyLinkedDocumentCheck());
         this.addDocumentCheck(new DeadEndDocumentCheck());
+        
+        // Standard wiki checks
+        this.addWikiCheck(new EmptyWikiCheck());
+        this.addWikiCheck(new NoWikiDocumentsCheck());
     }
 }

@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package org.dotnetrdf.wiki.checker.checks.links;
 
 import org.dotnetrdf.wiki.checker.checks.LinkCheck;
-import org.dotnetrdf.wiki.checker.data.CheckedWiki;
+import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.issues.Issue;
@@ -42,7 +42,7 @@ public class MissingFriendlyTextCheck implements LinkCheck {
 
     @Override
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
-            CheckedWiki<TLink, TDoc> wiki) {
+            AbstractCheckedWiki<TLink, TDoc> wiki) {
         // Issue warnings for links without friendly text
         // Don't issue a warning if this is a trivial relative link i.e. a link
         // to another page in the same directory

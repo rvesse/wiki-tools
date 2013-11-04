@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker;
 
@@ -27,6 +27,7 @@ import java.util.Iterator;
 
 import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.checks.LinkCheck;
+import org.dotnetrdf.wiki.checker.checks.WikiCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -49,6 +50,22 @@ public interface WikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocu
      * @return Wiki
      */
     public abstract CheckedWiki<TLink, TDoc> getWiki();
+
+    /**
+     * Adds a wiki check
+     * 
+     * @param check
+     *            Wiki check
+     */
+    public abstract void addWikiCheck(WikiCheck check);
+
+    /**
+     * Gets an iterator over registered wiki checks, must return the checks in
+     * the order registered
+     * 
+     * @return Iterator of wiki checks
+     */
+    public abstract Iterator<WikiCheck> getWikiChecks();
 
     /**
      * Adds a document check
@@ -81,16 +98,6 @@ public interface WikiChecker<TLink extends CheckedLink, TDoc extends CheckedDocu
      * @return Iterator of link checks
      */
     public abstract Iterator<LinkCheck> getLinkChecks();
-
-    // TODO Base Directory can likely be safely removed if we add a
-    // getInputStream() method to Document
-
-    /**
-     * Gets the base directory on disk where the wiki is located
-     * 
-     * @return Base Directory
-     */
-    public abstract String getBaseDirectory();
 
     /**
      * Runs the wiki checker

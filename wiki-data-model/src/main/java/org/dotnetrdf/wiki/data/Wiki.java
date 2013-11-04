@@ -66,6 +66,13 @@ public interface Wiki<TLink extends Link, TDoc extends Document<TLink>> {
     public TDoc getDocument(String linkPath);
 
     /**
+     * Gets the number of documents in the wiki
+     * 
+     * @return Number of documents
+     */
+    public int getDocumentCount();
+
+    /**
      * Gets the documents that are known to exist
      * 
      * @return Documents

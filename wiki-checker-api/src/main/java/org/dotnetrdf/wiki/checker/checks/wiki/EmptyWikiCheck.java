@@ -20,35 +20,26 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  */
 
-package org.dotnetrdf.wiki.checker.checks;
+package org.dotnetrdf.wiki.checker.checks.wiki;
 
-import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
+import org.dotnetrdf.wiki.checker.checks.WikiCheck;
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
+import org.dotnetrdf.wiki.checker.issues.Issue;
 
 /**
- * Interface for link checks
+ * A wiki check that issues errors for empty wikis
  * 
  * @author rvesse
  * 
- * 
  */
-public interface LinkCheck {
+public class EmptyWikiCheck implements WikiCheck {
 
-    /**
-     * Carries out a check on a link
-     * 
-     * @param document
-     *            Document
-     * @param link
-     *            Link
-     * @param wiki
-     *            Wiki
-     * @param <TLink>
-     *            Checked link type
-     * @param <TDoc>
-     *            Checked document type
-     */
-    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
-            AbstractCheckedWiki<TLink, TDoc> wiki);
+    @Override
+    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(CheckedWiki<TLink, TDoc> wiki) {
+        if (wiki.getDocumentCount() == 0)
+            wiki.addGlobalIssue(new Issue("Wiki has no documents", true));
+    }
+
 }
