@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.AbstractWiki;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Abstract implementation of a checked wiki which is a wiki composed of

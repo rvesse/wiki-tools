@@ -54,8 +54,8 @@ import org.dotnetrdf.wiki.checker.data.BasicCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
+import org.dotnetrdf.wiki.data.issues.Issue;
 import org.slf4j.LoggerFactory;
 
 /**

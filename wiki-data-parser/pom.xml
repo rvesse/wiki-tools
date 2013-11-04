@@ -7,7 +7,7 @@
 		<version>0.1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>wiki-data-parser</artifactId>
-	<name>Wiki Data Parser</name>
+	<name>Wiki Data Parser API</name>
 	<description>An API for parsing a wiki into the Wiki Data Model API representation</description>
 
 	<dependencies>

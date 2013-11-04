@@ -13,6 +13,7 @@
 		<module>wiki-data-model</module>
 		<module>wiki-data-parser</module>
 		<module>wiki-checker-cmd</module>
+		<module>wiki-render-api</module>
 	</modules>
 	
 	<build>

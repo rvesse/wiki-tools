@@ -24,7 +24,7 @@ package org.dotnetrdf.wiki.checker.parser;
 
 import java.io.File;
 
-import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
+import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.BasicCheckedDocument;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
@@ -32,7 +32,7 @@ import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
 import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
 
 /**
- * Scans a directory to populate a {@link AbstractCheckedWiki}
+ * Scans a directory to populate a {@link CheckedWiki}
  * 
  * @author rvesse
  * @param <TLink>
@@ -48,7 +48,7 @@ public class CheckedWikiScanner<TLink extends CheckedLink, TDoc extends CheckedD
     protected TDoc createDocument(String wikiPath, File f) {
         // Unchecked warning is kind of pointless because the type restriction
         // guarantees that TDoc will implement CheckedDocument so casting
-        // CheckedDocument to TDoc should always work
+        // BasicCheckedDocument to TDoc should always work
         return (TDoc) new BasicCheckedDocument(wikiPath, f, DocumentFormatRegistry.getFormat(f.getName()));
     }
 

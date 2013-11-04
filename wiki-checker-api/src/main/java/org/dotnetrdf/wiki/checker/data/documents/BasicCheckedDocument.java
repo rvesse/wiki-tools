@@ -28,8 +28,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * A document which can be checked and have issues logged against it

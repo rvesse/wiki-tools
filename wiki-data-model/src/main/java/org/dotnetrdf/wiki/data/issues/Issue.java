@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
  */ 
 
-package org.dotnetrdf.wiki.checker.issues;
+package org.dotnetrdf.wiki.data.issues;
 
 /**
  * Represents an issue with a page

@@ -28,9 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.AbstractDocument;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Abstract implementation of a checked document

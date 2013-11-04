@@ -20,26 +20,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  */
 
-package org.dotnetrdf.wiki.checker.checks.wiki;
+package org.dotnetrdf.wiki.render.parser;
 
-import org.dotnetrdf.wiki.checker.checks.WikiCheck;
-import org.dotnetrdf.wiki.checker.data.CheckedWiki;
-import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
-import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import java.io.File;
+
+import org.dotnetrdf.wiki.data.documents.formats.DocumentFormatRegistry;
+import org.dotnetrdf.wiki.data.links.Link;
+import org.dotnetrdf.wiki.parser.AbstractWikiScanner;
+import org.dotnetrdf.wiki.render.data.RenderedWiki;
+import org.dotnetrdf.wiki.render.data.documents.BasicRenderedDocument;
+import org.dotnetrdf.wiki.render.data.documents.RenderedDocument;
 
 /**
- * A wiki check that issues errors for empty wikis
+ * Scans a directory to populate a {@link RenderedWiki}
  * 
  * @author rvesse
  * 
+ * @param <TLink>
+ * @param <TDoc>
  */
-public class EmptyWikiCheck implements WikiCheck {
+public class RenderedWikiScanner<TLink extends Link, TDoc extends RenderedDocument<TLink>> extends
+        AbstractWikiScanner<TLink, TDoc> {
 
+    @SuppressWarnings("unchecked")
     @Override
-    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(CheckedWiki<TLink, TDoc> wiki) {
-        if (wiki.getDocumentCount() == 0)
-            wiki.addGlobalIssue(new Issue("Wiki has no documents", true));
+    protected TDoc createDocument(String wikiPath, File f) {
+        // Unchecked warning is kind of pointless because the type restriction
+        // guarantees that TDoc will implement RenderedDocument so casting
+        // BasicRenderedDocument to TDoc should always work
+        return (TDoc) new BasicRenderedDocument(wikiPath, f, DocumentFormatRegistry.getFormat(f.getName()));
     }
 
 }

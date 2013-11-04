@@ -25,8 +25,8 @@ package org.dotnetrdf.wiki.checker.data.documents;
 import java.util.Iterator;
 
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
 import org.dotnetrdf.wiki.data.documents.Document;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Interface for documents that may be checked for issues

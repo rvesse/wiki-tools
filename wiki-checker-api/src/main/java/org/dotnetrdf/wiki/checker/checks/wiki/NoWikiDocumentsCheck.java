@@ -28,7 +28,7 @@ import org.dotnetrdf.wiki.checker.checks.WikiCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Check that issues an error for wikis which contain zero wiki format documents

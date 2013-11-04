@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Document check that issues warnings for documents in wiki/text format which

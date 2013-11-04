@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.checker.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

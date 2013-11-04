@@ -20,35 +20,44 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
-package org.dotnetrdf.wiki.checker.checks.links;
+package org.dotnetrdf.wiki.render.data.documents;
 
-import org.dotnetrdf.wiki.checker.checks.LinkCheck;
-import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
-import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
-import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+
+import org.dotnetrdf.wiki.data.documents.formats.Format;
+import org.dotnetrdf.wiki.data.links.BasicLink;
 
 /**
- * A link check that issues warnings for {@code mailto:} links since these
- * expose email address publicly
+ * Basic implementation of a rendered documents
  * 
  * @author rvesse
  * 
  */
-public class EmailLinkCheck implements LinkCheck {
-    private static final Logger LOGGER = LoggerFactory.getLogger(EmailLinkCheck.class);
+public class BasicRenderedDocument extends AbstractRenderedDocument<BasicLink> {
+
+    /**
+     * Creates a document
+     * 
+     * @param wikiPath
+     *            Wiki path to the document
+     * @param f
+     *            Disk file for the document
+     * @param format
+     *            Format of the document
+     */
+    public BasicRenderedDocument(String wikiPath, File f, Format format) {
+        super(wikiPath, f, format);
+        // TODO Auto-generated constructor stub
+    }
 
     @Override
-    public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, TLink link,
-            AbstractCheckedWiki<TLink, TDoc> wiki) {
-        if (!link.isMailLink())
-            return;
+    public BasicLink createLink(String path, String text, int line, int column) {
+        return new BasicLink(path, text, line, column);
+    }
 
-        // Warn on mail links
-        document.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly", false));
-        LOGGER.warn("Email link exposes email address publicly - " + link.getPath().substring(7));
+    @Override
+    public BasicLink createLink(String path, int line, int column) {
+        return new BasicLink(path, line, column);
     }
 
 }
