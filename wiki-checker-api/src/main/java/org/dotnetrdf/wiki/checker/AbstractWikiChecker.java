@@ -130,7 +130,7 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
 
             // Check Links
             
-            // TODO Move into multiple LinkCheck implementations
+            // Apply link checks
             Iterator<TLink> links = document.getOutboundLinks();
             while (links.hasNext()) {
                 TLink link = links.next();
@@ -142,9 +142,6 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
                 }
             }
 
-            // Finally mark as checked
-            document.setChecked(true);
-
             LOGGER.debug("Finished checking links in document " + document.getPath());
         }
         LOGGER.info("Finished checking links in documents");
@@ -155,14 +152,21 @@ public class AbstractWikiChecker<TLink extends CheckedLink, TDoc extends Checked
         while (documents.hasNext()) {
             TDoc document = documents.next();
             
+            LOGGER.debug("Checking document " + document.getPath());
+            
             Iterator<DocumentCheck> docChecks = this.getDocumentChecks();
             while (docChecks.hasNext()) {
                 DocumentCheck check = docChecks.next();
                 
                 check.check(document, document.getText(), this.wiki);
             }
+            
+            // Finally mark as checked
+            document.setChecked(true);
         }
         LOGGER.info("Finished checking documents");
+        
+        // Finally carry out wiki checks
     }
 
     @Override
