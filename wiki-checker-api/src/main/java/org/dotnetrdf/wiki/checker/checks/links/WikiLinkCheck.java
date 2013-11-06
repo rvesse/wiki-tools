@@ -26,7 +26,6 @@ import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +50,7 @@ public class WikiLinkCheck implements LinkCheck {
         TDoc target = wiki.getDocument(linkPath);
         if (target == null) {
             // Mark as Broken
-            document.addIssue(new Issue("Broken Wiki Link - " + link.toString(), true));
+            document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Broken Wiki Link - " + link.toString()));
             LOGGER.error("Broken wiki link " + link.toString());
         } else {
             // Mark as Inbound Link on target Page

@@ -30,6 +30,7 @@ import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.AbstractWiki;
 import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 
 /**
  * Abstract implementation of a checked wiki which is a wiki composed of
@@ -45,7 +46,7 @@ public abstract class AbstractCheckedWiki<TLink extends CheckedLink, TDoc extend
         AbstractWiki<TLink, TDoc> implements CheckedWiki<TLink, TDoc> {
 
     private boolean checked = false;
-    protected Set<Issue> globalIssues = new HashSet<Issue>();
+    protected Set<AbstractIssue> globalIssues = new HashSet<AbstractIssue>();
 
     @Override
     public int getTotalErrorCount() {
@@ -79,7 +80,7 @@ public abstract class AbstractCheckedWiki<TLink extends CheckedLink, TDoc extend
     }
 
     @Override
-    public void addGlobalIssue(Issue issue) {
+    public void addGlobalIssue(AbstractIssue issue) {
         if (issue == null)
             return;
         this.globalIssues.add(issue);
@@ -100,7 +101,7 @@ public abstract class AbstractCheckedWiki<TLink extends CheckedLink, TDoc extend
     }
 
     @Override
-    public Iterator<Issue> getGlobalIssues() {
+    public Iterator<AbstractIssue> getGlobalIssues() {
         return this.globalIssues.iterator();
     }
 

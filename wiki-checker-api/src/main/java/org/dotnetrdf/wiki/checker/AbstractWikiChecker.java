@@ -35,7 +35,7 @@ import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 import org.dotnetrdf.wiki.parser.links.LinkDetector;
 import org.dotnetrdf.wiki.parser.links.LinkDetectorRegistry;
 import org.slf4j.Logger;
@@ -125,8 +125,8 @@ public abstract class AbstractWikiChecker<TLink extends CheckedLink, TDoc extend
             LinkDetector detector = LinkDetectorRegistry.getLinkDetector(document.getFormat());
             if (detector == null) {
                 // Issue a warning when no link detector available
-                document.addIssue(new Issue("Page has format " + document.getFormat().toString()
-                        + " which does not have a link detector, no links can be detected for this document", false));
+                document.addIssue(new Warning("Page has format " + document.getFormat().toString()
+                        + " which does not have a link detector, no links can be detected for this document"));
             } else {
                 // Detect links
                 detector.findLinks(document, text);

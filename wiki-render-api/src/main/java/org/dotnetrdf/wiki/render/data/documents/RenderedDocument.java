@@ -26,7 +26,7 @@ import java.io.File;
 import java.util.Iterator;
 
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 import org.dotnetrdf.wiki.data.links.Link;
 
 /**
@@ -75,14 +75,14 @@ public interface RenderedDocument<TLink extends Link> extends Document<TLink> {
      * @param issue
      *            Rendering issue
      */
-    public void addRenderingIssue(Issue issue);
+    public void addRenderingIssue(AbstractIssue issue);
 
     /**
      * Gets an iterator over the rendering issues
      * 
      * @return Iterator of rendering issues
      */
-    public Iterator<Issue> getRenderingIssues();
+    public Iterator<AbstractIssue> getRenderingIssues();
 
     /**
      * Gets whether the document has rendering issues

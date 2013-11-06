@@ -26,7 +26,6 @@ import org.dotnetrdf.wiki.checker.checks.WikiCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * A wiki check that issues errors for empty wikis
@@ -39,7 +38,7 @@ public class EmptyWikiCheck implements WikiCheck {
     @Override
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(CheckedWiki<TLink, TDoc> wiki) {
         if (wiki.getDocumentCount() == 0)
-            wiki.addGlobalIssue(new Issue("Wiki has no documents", true));
+            wiki.addGlobalIssue(new org.dotnetrdf.wiki.data.issues.Error("Wiki has no documents"));
     }
 
 }

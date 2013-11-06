@@ -26,7 +26,6 @@ import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Document check that issues warnings for documents which have no incoming
@@ -41,7 +40,7 @@ public class IsolatedDocumentCheck implements DocumentCheck {
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, String text,
             CheckedWiki<TLink, TDoc> wiki) {
         if (document.getInboundLinkCount() == 0)
-            document.addIssue(new Issue("Document is isolated,  no inbound links to this document were found", true));
+            document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Document is isolated,  no inbound links to this document were found"));
     }
 
 }

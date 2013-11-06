@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class EmailLinkCheck implements LinkCheck {
             return;
 
         // Warn on mail links
-        document.addIssue(new Issue("Email Links expose email address " + link.getPath().substring(7) + " publicly", false));
+        document.addIssue(new Warning("Email Links expose email address " + link.getPath().substring(7) + " publicly"));
         LOGGER.warn("Email link exposes email address publicly - " + link.getPath().substring(7));
     }
 

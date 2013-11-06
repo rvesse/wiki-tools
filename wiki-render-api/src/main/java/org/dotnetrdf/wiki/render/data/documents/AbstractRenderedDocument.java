@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.dotnetrdf.wiki.data.documents.AbstractDocument;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 import org.dotnetrdf.wiki.data.links.Link;
 
 /**
@@ -43,7 +43,7 @@ import org.dotnetrdf.wiki.data.links.Link;
 public abstract class AbstractRenderedDocument<TLink extends Link> extends AbstractDocument<TLink> implements
         RenderedDocument<TLink> {
 
-    private List<Issue> renderingIssues = new ArrayList<Issue>();
+    private List<AbstractIssue> renderingIssues = new ArrayList<AbstractIssue>();
     private boolean rendered = false;
     private File renderedFile;
 
@@ -82,13 +82,13 @@ public abstract class AbstractRenderedDocument<TLink extends Link> extends Abstr
     }
 
     @Override
-    public void addRenderingIssue(Issue issue) {
+    public void addRenderingIssue(AbstractIssue issue) {
         if (issue != null)
             this.renderingIssues.add(issue);
     }
 
     @Override
-    public Iterator<Issue> getRenderingIssues() {
+    public Iterator<AbstractIssue> getRenderingIssues() {
         return this.renderingIssues.iterator();
     }
 

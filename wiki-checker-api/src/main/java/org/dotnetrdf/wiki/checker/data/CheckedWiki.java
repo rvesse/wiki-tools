@@ -27,7 +27,7 @@ import java.util.Iterator;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.Wiki;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 
 /**
  * Interface for wikis consisting of checked documents
@@ -70,7 +70,7 @@ public interface CheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocu
      * @param issue
      *            Issue
      */
-    public abstract void addGlobalIssue(Issue issue);
+    public abstract void addGlobalIssue(AbstractIssue issue);
 
     /**
      * Gets whether the wiki has any global issues (errors/warnings)
@@ -91,7 +91,7 @@ public interface CheckedWiki<TLink extends CheckedLink, TDoc extends CheckedDocu
      * 
      * @return Global issues
      */
-    public abstract Iterator<Issue> getGlobalIssues();
+    public abstract Iterator<AbstractIssue> getGlobalIssues();
 
     /**
      * Gets the number of global issues identified

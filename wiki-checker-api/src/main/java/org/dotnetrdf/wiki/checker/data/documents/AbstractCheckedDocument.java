@@ -31,6 +31,7 @@ import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.documents.AbstractDocument;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
 import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 
 /**
  * Abstract implementation of a checked document
@@ -45,7 +46,7 @@ public abstract class AbstractCheckedDocument<TLink extends CheckedLink> extends
     // TODO Should really add a CheckedLink type
 
     private boolean checked = false;
-    private List<Issue> issues = new ArrayList<Issue>();
+    private List<AbstractIssue> issues = new ArrayList<AbstractIssue>();
 
     /**
      * Creates a document
@@ -72,7 +73,7 @@ public abstract class AbstractCheckedDocument<TLink extends CheckedLink> extends
     }
 
     @Override
-    public void addIssue(Issue issue) {
+    public void addIssue(AbstractIssue issue) {
         this.issues.add(issue);
     }
 
@@ -91,7 +92,7 @@ public abstract class AbstractCheckedDocument<TLink extends CheckedLink> extends
     }
 
     @Override
-    public Iterator<Issue> getIssues() {
+    public Iterator<AbstractIssue> getIssues() {
         return this.issues.iterator();
     }
 

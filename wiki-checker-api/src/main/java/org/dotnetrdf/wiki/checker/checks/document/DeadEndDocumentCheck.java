@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 
 /**
  * Document check that issues warnings for documents in wiki/text format which
@@ -42,7 +42,7 @@ public class DeadEndDocumentCheck implements DocumentCheck {
             CheckedWiki<TLink, TDoc> wiki) {
         if (document.getFormat().isWiki() || document.getFormat().isText()) {
             if (document.getOutboundLinkCount() == 0) {
-                document.addIssue(new Issue("Document is a dead end with zero outbound links"));
+                document.addIssue(new Warning("Document is a dead end with zero outbound links"));
             }
         }
     }

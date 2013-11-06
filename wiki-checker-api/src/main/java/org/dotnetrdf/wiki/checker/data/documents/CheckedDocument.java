@@ -26,7 +26,7 @@ import java.util.Iterator;
 
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
 import org.dotnetrdf.wiki.data.documents.Document;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 
 /**
  * Interface for documents that may be checked for issues
@@ -51,7 +51,7 @@ public interface CheckedDocument<TLink extends CheckedLink> extends Document<TLi
      * @param issue
      *            Issue
      */
-    public abstract void addIssue(Issue issue);
+    public abstract void addIssue(AbstractIssue issue);
 
     /**
      * Gets whether the document has any issues (errors/warnings)
@@ -72,7 +72,7 @@ public interface CheckedDocument<TLink extends CheckedLink> extends Document<TLi
      * 
      * @return Issues
      */
-    public abstract Iterator<Issue> getIssues();
+    public abstract Iterator<AbstractIssue> getIssues();
 
     /**
      * Gets the number of issues identified

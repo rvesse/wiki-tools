@@ -18,7 +18,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-*/
+ */
 
 package org.dotnetrdf.wiki.checker.checks.wiki;
 
@@ -28,7 +28,6 @@ import org.dotnetrdf.wiki.checker.checks.WikiCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Check that issues an error for wikis which contain zero wiki format documents
@@ -48,7 +47,7 @@ public class NoWikiDocumentsCheck implements WikiCheck {
         }
 
         // No wiki documents found
-        wiki.addGlobalIssue(new Issue("Wiki contains no wiki format documents", true));
+        wiki.addGlobalIssue(new org.dotnetrdf.wiki.data.issues.Error("Wiki contains no wiki format documents"));
     }
 
 }

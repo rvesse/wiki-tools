@@ -30,6 +30,7 @@ import java.util.List;
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
 import org.dotnetrdf.wiki.data.documents.formats.Format;
 import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 
 /**
  * A document which can be checked and have issues logged against it
@@ -41,7 +42,7 @@ public class BasicCheckedDocument extends AbstractCheckedDocument<BasicCheckedLi
     // TODO Should really add a CheckedLink type
 
     private boolean checked = false;
-    private List<Issue> issues = new ArrayList<Issue>();
+    private List<AbstractIssue> issues = new ArrayList<AbstractIssue>();
 
     /**
      * Creates a document
@@ -97,7 +98,7 @@ public class BasicCheckedDocument extends AbstractCheckedDocument<BasicCheckedLi
      * .dotnetrdf.wiki.checker.issues.Issue)
      */
     @Override
-    public void addIssue(Issue issue) {
+    public void addIssue(AbstractIssue issue) {
         this.issues.add(issue);
     }
 
@@ -134,7 +135,7 @@ public class BasicCheckedDocument extends AbstractCheckedDocument<BasicCheckedLi
      * org.dotnetrdf.wiki.checker.data.documents.ICheckedDocument#getIssues()
      */
     @Override
-    public Iterator<Issue> getIssues() {
+    public Iterator<AbstractIssue> getIssues() {
         return this.issues.iterator();
     }
 

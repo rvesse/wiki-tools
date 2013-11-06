@@ -39,7 +39,7 @@ import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,8 +71,8 @@ public class ExternalLinkCheck implements LinkCheck {
         if (this.externalUris.get(link.getPath()) != null) {
             // Already validated, report broken link if necessary
             if (this.externalUris.get(link.getPath()) != true) {
-                document.addIssue(new Issue("Broken External Link (HTTP Status " + this.httpStatuses.get(link.getPath()) + ") - "
-                        + link.toString(), true));
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Broken External Link (HTTP Status " + this.httpStatuses.get(link.getPath()) + ") - "
+                        + link.toString()));
             }
         } else {
             // Validate the external link
@@ -86,12 +86,12 @@ public class ExternalLinkCheck implements LinkCheck {
                     Violation violation = violations.next();
                     if (violation.isError()) {
                         iriErrors = true;
-                        document.addIssue(new Issue("External Link " + link.toString() + " violates the IRI specification - "
-                                + violation.getLongMessage(), true));
+                        document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("External Link " + link.toString() + " violates the IRI specification - "
+                                + violation.getLongMessage()));
                         LOGGER.error("Link " + link.toString() + " is not a valid IRI - " + violation.getLongMessage());
                     } else {
-                        document.addIssue(new Issue("External Link " + link.toString()
-                                + " has a warning against the IRI specification - " + violation.getShortMessage(), false));
+                        document.addIssue(new Warning("External Link " + link.toString()
+                                + " has a warning against the IRI specification - " + violation.getShortMessage()));
                         LOGGER.warn("Link " + link.toString() + " has an IRI warning - " + violation.getLongMessage());
                     }
                 }
@@ -133,23 +133,23 @@ public class ExternalLinkCheck implements LinkCheck {
                         // Invalid
                         this.externalUris.put(link.getPath(), false);
                         this.httpStatuses.put(link.getPath(), resp.getStatusLine().getStatusCode());
-                        document.addIssue(new Issue("Broken External Link (HTTP Status " + resp.getStatusLine().getStatusCode()
-                                + ") - " + link.toString(), true));
+                        document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Broken External Link (HTTP Status " + resp.getStatusLine().getStatusCode()
+                                + ") - " + link.toString()));
                         LOGGER.error("External Link " + link.getPath() + " is invalid");
                     }
                 }
 
             } catch (IllegalArgumentException e) {
                 this.externalUris.put(link.getPath(), false);
-                document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Invalid External Link URI - " + link.toString()));
                 LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
             } catch (UnknownHostException e) {
                 this.externalUris.put(link.getPath(), false);
-                document.addIssue(new Issue("Invalid External Link URI - " + link.toString(), true));
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Invalid External Link URI - " + link.toString()));
                 LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
             } catch (Throwable e) {
                 this.externalUris.put(link.getPath(), false);
-                document.addIssue(new Issue("Unexpected Error with External Link URI - " + link.toString(), true));
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Unexpected Error with External Link URI - " + link.toString()));
                 LOGGER.debug("External Link " + link.getPath() + " is invalid", e);
             } finally {
                 if (head != null) {

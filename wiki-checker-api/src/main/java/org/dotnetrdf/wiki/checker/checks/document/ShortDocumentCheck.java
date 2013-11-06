@@ -26,7 +26,6 @@ import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
 
 /**
  * Document check which issues warnings for documents that are below a certain
@@ -71,7 +70,7 @@ public class ShortDocumentCheck implements DocumentCheck {
         // Check for short documents by textual length
         if (document.getFormat().isText() && text != null) {
             if (text.length() < this.threshold) {
-                document.addIssue(new Issue("Page has only " + text.length()
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error("Page has only " + text.length()
                         + " characters, this document may be an incomplete/stub document"));
                 return;
             }
@@ -80,7 +79,7 @@ public class ShortDocumentCheck implements DocumentCheck {
         // Check for short documents by file size
         if (document.getFile() != null && document.getFile().exists()) {
             if (document.getFile().length() < this.threshold) {
-                document.addIssue(new Issue(String.format(
+                document.addIssue(new org.dotnetrdf.wiki.data.issues.Error(String.format(
                         "Document is only %,d bytes in length, this document may be an incomplete/stub document", document
                                 .getFile().length())));
             }

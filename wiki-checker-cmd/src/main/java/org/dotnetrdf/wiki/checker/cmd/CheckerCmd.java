@@ -56,6 +56,7 @@ import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.BasicCheckedLink;
 import org.dotnetrdf.wiki.checker.parser.CheckedWikiScanner;
 import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.AbstractIssue;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -221,7 +222,7 @@ public class CheckerCmd {
 
         // Report on global issues
         pw.println(wiki.getGlobalErrorCount() + " Global Error(s) and " + wiki.getGlobalWarningCount() + " Global Warning(s)");
-        Iterator<Issue> globalIssues = wiki.getGlobalIssues();
+        Iterator<AbstractIssue> globalIssues = wiki.getGlobalIssues();
         while (globalIssues.hasNext()) {
             Issue i = globalIssues.next();
             if (i.isError() || this.verbose || this.showWarnings) {
@@ -240,7 +241,7 @@ public class CheckerCmd {
 
             // Report Issues
             if (document.hasIssues() && (this.showWarnings || document.hasErrors())) {
-                Iterator<Issue> issues = document.getIssues();
+                Iterator<AbstractIssue> issues = document.getIssues();
                 while (issues.hasNext()) {
                     Issue issue = issues.next();
                     pw.println(issue.toString());

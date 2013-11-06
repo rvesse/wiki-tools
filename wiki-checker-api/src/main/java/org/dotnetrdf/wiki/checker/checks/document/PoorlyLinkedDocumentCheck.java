@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.DocumentCheck;
 import org.dotnetrdf.wiki.checker.data.CheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 
 /**
  * Document check which issues warnings for documents that don't have more
@@ -68,8 +68,8 @@ public class PoorlyLinkedDocumentCheck implements DocumentCheck {
     public <TLink extends CheckedLink, TDoc extends CheckedDocument<TLink>> void check(TDoc document, String text,
             CheckedWiki<TLink, TDoc> wiki) {
         if (document.getInboundLinkCount() > 0 && document.getInboundLinkCount() <= this.threshold)
-            document.addIssue(new Issue("Document is poorly linked with only " + document.getInboundLinkCount()
-                    + " inbound link(s)", false));
+            document.addIssue(new Warning("Document is poorly linked with only " + document.getInboundLinkCount()
+                    + " inbound link(s)"));
     }
 
 }

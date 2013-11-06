@@ -26,7 +26,7 @@ import org.dotnetrdf.wiki.checker.checks.LinkCheck;
 import org.dotnetrdf.wiki.checker.data.AbstractCheckedWiki;
 import org.dotnetrdf.wiki.checker.data.documents.CheckedDocument;
 import org.dotnetrdf.wiki.checker.data.links.CheckedLink;
-import org.dotnetrdf.wiki.data.issues.Issue;
+import org.dotnetrdf.wiki.data.issues.Warning;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +47,7 @@ public class MissingFriendlyTextCheck implements LinkCheck {
         // Don't issue a warning if this is a trivial relative link i.e. a link
         // to another page in the same directory
         if (!link.hasFriendlyText() && !link.isMailLink() && (!link.isWikiLink() || link.getPath().contains("/"))) {
-            document.addIssue(new Issue("Link does not have friendly text - " + link.toString(), false));
+            document.addIssue(new Warning("Link does not have friendly text - " + link.toString()));
             LOGGER.warn("Link does not have friendly text - " + link.toString());
         }
     }
